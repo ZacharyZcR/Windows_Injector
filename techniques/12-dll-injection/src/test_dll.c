@@ -26,7 +26,33 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
                     "这证明 DLL Injection 成功！",
                     pid, hinstDLL);
 
-            MessageBoxA(NULL, message, "DLL Injection - 加载成功", MB_OK | MB_ICONINFORMATION);
+            // 创建验证文件
+            HANDLE hFile = CreateFileA(
+                "C:\\Users\\Public\\dll_injection_verified.txt",
+                GENERIC_WRITE,
+                0,
+                NULL,
+                CREATE_ALWAYS,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+            );
+
+            if (hFile != INVALID_HANDLE_VALUE) {
+                char fileMsg[512];
+                sprintf(fileMsg,
+                    "DLL Injection Verified!\n"
+                    "Process ID: %lu\n"
+                    "DLL Handle: 0x%p\n"
+                    "Technique: CreateRemoteThread + LoadLibrary\n"
+                    "Status: DLL loaded successfully!\n"
+                    "DLL_PROCESS_ATTACH executed!\n",
+                    pid, hinstDLL);
+                DWORD written;
+                WriteFile(hFile, fileMsg, strlen(fileMsg), &written, NULL);
+                CloseHandle(hFile);
+            }
+
+            // MessageBoxA(NULL, message, "DLL Injection - 加载成功", MB_OK | MB_ICONINFORMATION);
             break;
 
         case DLL_PROCESS_DETACH:
