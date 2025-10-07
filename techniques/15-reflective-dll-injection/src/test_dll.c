@@ -54,36 +54,52 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved)
                 CloseHandle(hProcess);
             }
 
-            // 构造消息
-            snprintf(message, sizeof(message),
-                "✅ 反射 DLL 注入成功!\n\n"
-                "进程 ID: %lu\n"
-                "进程路径: %s\n\n"
-                "DLL 基址: 0x%p\n\n"
-                "这个 DLL 通过反射加载器（ReflectiveLoader）加载，\n"
-                "没有使用 Windows 的 LoadLibrary API。\n\n"
-                "关键特点：\n"
-                "• DLL 自己实现 PE 加载器\n"
-                "• 不触发 LoadLibrary 相关的 ETW 事件\n"
-                "• 不经过标准 DLL 加载流程\n"
-                "• 高度隐蔽，难以检测",
-                processId,
-                strlen(processPath) > 0 ? processPath : "未知",
-                hinstDLL
+            // 创建验证文件
+            HANDLE hFile = CreateFileA(
+                "C:\\Users\\Public\\reflective_dll_injection_verified.txt",
+                GENERIC_WRITE,
+                0,
+                NULL,
+                CREATE_ALWAYS,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
             );
 
-            // 显示消息框
-            MessageBoxA(NULL, message, "Reflective DLL Injection - 成功", MB_OK | MB_ICONINFORMATION);
+            if (hFile != INVALID_HANDLE_VALUE) {
+                snprintf(message, sizeof(message),
+                    "Reflective DLL Injection Verified!\n"
+                    "Process ID: %lu\n"
+                    "Process Path: %s\n"
+                    "DLL Base Address: 0x%p\n"
+                    "Technique: Reflective DLL Injection\n"
+                    "Loader: ReflectiveLoader (Custom PE Loader)\n"
+                    "Status: DLL loaded successfully without LoadLibrary!\n"
+                    "Key Features:\n"
+                    "- Custom PE loader implemented in DLL\n"
+                    "- No LoadLibrary ETW events triggered\n"
+                    "- Bypasses standard DLL loading process\n"
+                    "- High stealth, difficult to detect\n",
+                    processId,
+                    strlen(processPath) > 0 ? processPath : "Unknown",
+                    hinstDLL
+                );
+                DWORD written;
+                WriteFile(hFile, message, strlen(message), &written, NULL);
+                CloseHandle(hFile);
+            }
+
+            // 注释掉 MessageBox，避免阻塞
+            // MessageBoxA(NULL, message, "Reflective DLL Injection - 成功", MB_OK | MB_ICONINFORMATION);
 
             break;
 
         case DLL_PROCESS_DETACH:
             // DLL 卸载
-            MessageBoxA(NULL,
-                "⚠️ 反射 DLL 正在卸载\n\n"
-                "DLL 已从进程中移除。",
-                "Reflective DLL Injection - 卸载",
-                MB_OK | MB_ICONWARNING);
+            // MessageBoxA(NULL,
+            //     "⚠️ 反射 DLL 正在卸载\n\n"
+            //     "DLL 已从进程中移除。",
+            //     "Reflective DLL Injection - 卸载",
+            //     MB_OK | MB_ICONWARNING);
             break;
 
         case DLL_THREAD_ATTACH:
