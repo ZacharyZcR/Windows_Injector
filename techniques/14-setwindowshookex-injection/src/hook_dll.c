@@ -39,18 +39,38 @@ void ShowInjectionMessage() {
         CloseHandle(hProcess);
     }
 
-    // 构造消息
-    snprintf(message, sizeof(message),
-        "✅ SetWindowsHookEx 注入成功!\n\n"
-        "进程 ID: %lu\n"
-        "进程路径: %s\n\n"
-        "DLL 已通过 Windows 钩子机制加载到此进程。\n"
-        "钩子过程现在可以监视和处理消息。",
-        processId,
-        strlen(processPath) > 0 ? processPath : "未知"
+    // 创建验证文件
+    HANDLE hFile = CreateFileA(
+        "C:\\Users\\Public\\setwindowshookex_injection_verified.txt",
+        GENERIC_WRITE,
+        0,
+        NULL,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
     );
 
-    MessageBoxA(NULL, message, "SetWindowsHookEx Injection - 成功", MB_OK | MB_ICONINFORMATION);
+    if (hFile != INVALID_HANDLE_VALUE) {
+        char fileMsg[1024];
+        snprintf(fileMsg, sizeof(fileMsg),
+            "SetWindowsHookEx Injection Verified!\n"
+            "Process ID: %lu\n"
+            "Process Path: %s\n"
+            "Technique: SetWindowsHookEx + Windows Hook Mechanism\n"
+            "Hook Type: WH_GETMESSAGE\n"
+            "Status: DLL loaded successfully via Windows hook!\n"
+            "DLL_PROCESS_ATTACH executed!\n"
+            "Hook procedure: NextHook\n",
+            processId,
+            strlen(processPath) > 0 ? processPath : "Unknown"
+        );
+        DWORD written;
+        WriteFile(hFile, fileMsg, strlen(fileMsg), &written, NULL);
+        CloseHandle(hFile);
+    }
+
+    // 注释掉 MessageBox，避免阻塞
+    // MessageBoxA(NULL, message, "SetWindowsHookEx Injection - 成功", MB_OK | MB_ICONINFORMATION);
 }
 
 // 钩子过程 - 必须导出此函数
@@ -126,11 +146,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
              * DLL 会保留在进程中直到进程退出。
              */
 
-            MessageBoxA(NULL,
-                "⚠️ DLL 正在卸载\n\n"
-                "钩子 DLL 即将从进程中卸载。",
-                "SetWindowsHookEx Injection - 卸载",
-                MB_OK | MB_ICONWARNING);
+            // MessageBoxA(NULL,
+            //     "⚠️ DLL 正在卸载\n\n"
+            //     "钩子 DLL 即将从进程中卸载。",
+            //     "SetWindowsHookEx Injection - 卸载",
+            //     MB_OK | MB_ICONWARNING);
 
             break;
 
