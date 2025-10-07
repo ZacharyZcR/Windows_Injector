@@ -20,7 +20,9 @@
 ## 技术分类
 
 ### 进程操纵技术 (1-5)
+
 利用 Windows 进程创建机制的高级攻击：
+
 1. **Process Hollowing** - 进程镂空
 2. **Transacted Hollowing** - 事务镂空
 3. **Process Doppelgänging** - 进程伪装
@@ -28,7 +30,9 @@
 5. **Process Ghosting** - 进程幽灵化
 
 ### 早期执行和回调技术 (6-10)
+
 在进程/线程初始化阶段劫持执行流：
+
 6. **Early Bird APC** - 早期鸟 APC 注入
 7. **Entry Point Injection** - 入口点注入
 8. **DLL Blocking (Ruy-Lopez)** - DLL 阻断注入
@@ -36,7 +40,9 @@
 10. **Kernel Callback Table** - 内核回调表注入
 
 ### 经典注入技术 (11-20)
+
 Windows 注入技术的基础方法：
+
 11. **Advanced Hollowing** - 高级镂空
 12. **DLL Injection** - DLL 注入
 13. **Shellcode Injection** - Shellcode 注入
@@ -49,7 +55,9 @@ Windows 注入技术的基础方法：
 20. **Atom Bombing** - 原子轰炸
 
 ### 高级规避技术 (21-31)
+
 绕过现代安全防护的创新方法：
+
 21. **Mockingjay** - RWX 节区注入
 22. **PowerLoaderEx** - 共享桌面堆注入
 23. **Threadless Inject** - 无线程注入
@@ -63,7 +71,9 @@ Windows 注入技术的基础方法：
 31. **Stack Bombing** - 栈轰炸注入
 
 ### 现代前沿技术 (32-41)
+
 2023-2024 年最新安全研究成果：
+
 32. **GhostInjector** - 幽灵注入器
 33. **GhostWriting** - 幽灵写入
 34. **GhostWriting-2** - 改进版幽灵写入

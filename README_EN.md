@@ -20,7 +20,9 @@ This repository contains complete implementations of Windows process injection t
 ## Technique Categories
 
 ### Process Manipulation (1-5)
+
 Advanced attacks leveraging Windows process creation mechanisms:
+
 1. **Process Hollowing**
 2. **Transacted Hollowing**
 3. **Process Doppelgänging**
@@ -28,7 +30,9 @@ Advanced attacks leveraging Windows process creation mechanisms:
 5. **Process Ghosting**
 
 ### Early Execution and Callback (6-10)
+
 Hijacking execution flow during process/thread initialization:
+
 6. **Early Bird APC**
 7. **Entry Point Injection**
 8. **DLL Blocking (Ruy-Lopez)**
@@ -36,7 +40,9 @@ Hijacking execution flow during process/thread initialization:
 10. **Kernel Callback Table**
 
 ### Classic Injection (11-20)
+
 Foundational Windows injection methods:
+
 11. **Advanced Hollowing**
 12. **DLL Injection**
 13. **Shellcode Injection**
@@ -49,7 +55,9 @@ Foundational Windows injection methods:
 20. **Atom Bombing**
 
 ### Advanced Evasion (21-31)
+
 Innovative methods to bypass modern security defenses:
+
 21. **Mockingjay** - RWX Section Injection
 22. **PowerLoaderEx** - Shared Desktop Heap Injection
 23. **Threadless Inject**
@@ -63,7 +71,9 @@ Innovative methods to bypass modern security defenses:
 31. **Stack Bombing**
 
 ### Modern Cutting-Edge (32-41)
+
 Latest security research from 2023-2024:
+
 32. **GhostInjector**
 33. **GhostWriting**
 34. **GhostWriting-2**
