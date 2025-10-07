@@ -153,51 +153,51 @@ ldrshuffle.exe
 
 本项目的每个技术都基于原始研究实现。以下是所有参考仓库的完整列表（按技术编号排序）：
 
-### 进程操纵技术
+### 进程操纵技术 (1-5)
 1. [m0n0ph1/Process-Hollowing](https://github.com/m0n0ph1/Process-Hollowing) - Process Hollowing
 2. [hasherezade/transacted_hollowing](https://github.com/hasherezade/transacted_hollowing) - Transacted Hollowing
 3. [hasherezade/process_doppelganging](https://github.com/hasherezade/process_doppelganging) - Process Doppelgänging
 4. [jxy-s/herpaderping](https://github.com/jxy-s/herpaderping) - Process Herpaderping
 5. [hasherezade/process_ghosting](https://github.com/hasherezade/process_ghosting) - Process Ghosting
 
-### 早期执行和回调技术
-6. [Ruy-Lopez (Early_Bird_APC_Injection)](https://github.com/) - Early Bird APC
-7. [AddressOfEntryPoint-injection](https://github.com/) - Entry Point Injection
-8. [Ruy-Lopez/DllBlock](https://github.com/) - DLL Blocking
-9. [earlycascade-injection](https://github.com/) - Early Cascade
-10. [KernelCallbackTable-Injection-PoC](https://github.com/) - Kernel Callback Table
+### 早期执行和回调技术 (6-10)
+6. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - Early Bird APC (包含 Ruy-Lopez/HookForward)
+7. [diversenok/Suspending-Techniques](https://github.com/diversenok/Suspending-Techniques) - Entry Point Injection (AddressOfEntryPoint-injection)
+8. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - DLL Blocking (包含 Ruy-Lopez/DllBlock)
+9. [D1rkMtr/earlycascade-injection](https://github.com/D1rkMtr/earlycascade-injection) - Early Cascade
+10. [odzhan/injection](https://github.com/odzhan/injection) - Kernel Callback Table (KernelCallbackTable-Injection-PoC)
 
-### 经典注入技术
-11. [PichichiH0ll0wer (Nim)](https://github.com/) - Advanced Hollowing
-12. [dll_injector](https://github.com/) - DLL Injection
-13. [Shellcode-Injection-Techniques](https://github.com/) - Shellcode Injection
-14. [SetWindowsHookEx-Injector](https://github.com/) - SetWindowsHookEx
+### 经典注入技术 (11-20)
+11. [snovvcrash/PichichiH0ll0wer](https://github.com/snovvcrash/PichichiH0ll0wer) - Advanced Hollowing (Nim)
+12. [stephenfewer/ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection) - DLL Injection (也用于反射式DLL注入)
+13. [rapid7/metasploit-framework](https://github.com/rapid7/metasploit-framework) - Shellcode Injection (参考)
+14. [hfiref0x/WinObjEx64](https://github.com/hfiref0x/WinObjEx64) - SetWindowsHookEx (参考)
 15. [stephenfewer/ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection) - Reflective DLL Injection
-16. [PE-Injection](https://github.com/) - PE Injection
-17. [Mapping-Injection](https://github.com/) - Mapping Injection
-18. [Rust-APC-Queue-Injection (Rust)](https://github.com/) - APC Queue Injection
-19. [ThreadHijacking_CSharp (C#)](https://github.com/) - Thread Hijacking
-20. [BreakingMalwareResearch/AtomBombing](https://github.com/BreakingMalwareResearch/atom-bombing) - Atom Bombing
+16. [NUL0x4C/PE-Injection](https://github.com/NUL0x4C/PE-Injection) - PE Injection
+17. [hasherezade/process_doppelganging](https://github.com/hasherezade/process_doppelganging) - Mapping Injection (参考)
+18. [Kudaes/Rust-APC-Queue-Injection](https://github.com/Kudaes/Rust-APC-Queue-Injection) - APC Queue Injection (Rust)
+19. [iGh0st/ThreadHijacking](https://github.com/iGh0st/ThreadHijacking) - Thread Hijacking (C#)
+20. [BreakingMalwareResearch/atom-bombing](https://github.com/BreakingMalwareResearch/atom-bombing) - Atom Bombing
 
-### 高级规避技术
-21. [caueb/Mockingjay](https://github.com/) - Mockingjay
-22. [BreakingMalware/PowerLoaderEx](https://github.com/) - PowerLoaderEx
-23. [CCob/ThreadlessInject](https://github.com/) - Threadless Inject
-24. [Kudaes/EPI](https://github.com/) - EPI
-25. [Dec0ne/DllNotificationInjection](https://github.com/), [ShorSec/DllNotificationInjection](https://github.com/) - DLL Notification Injection
-26. [d1rkmtrr/D1rkInject](https://github.com/) - Module Stomping
-27. [LloydLabs/ntqueueapcthreadex-ntdll-gadget-injection](https://github.com/) - Gadget APC Injection
-28. [deepinstinct/Dirty-Vanity](https://github.com/) - Process Forking
-29. [Idov31/FunctionStomping](https://github.com/) - Function Stomping
-30. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/) - Caro-Kann
-31. [maziland/StackBombing](https://github.com/) - Stack Bombing
+### 高级规避技术 (21-31)
+21. [secur30nly/Mockingjay](https://github.com/secur30nly/Mockingjay) - Mockingjay
+22. [BreakingMalware/PowerLoaderEx](https://github.com/BreakingMalware/PowerLoaderEx) - PowerLoaderEx
+23. [CCob/ThreadlessInject](https://github.com/CCob/ThreadlessInject) - Threadless Inject
+24. [Kudaes/EPI](https://github.com/Kudaes/EPI) - EPI
+25. [Dec0ne/DllNotificationInjection](https://github.com/Dec0ne/DllNotificationInjection) 和 [ShorSec/DllNotificationInjection](https://github.com/ShorSec/DllNotificationInjection) - DLL Notification Injection
+26. [D1rkMtr/D1rkInject](https://github.com/D1rkMtr/D1rkInject) - Module Stomping
+27. [LloydLabs/ntqueueapcthreadex-ntdll-gadget-injection](https://github.com/LloydLabs/ntqueueapcthreadex-ntdll-gadget-injection) - Gadget APC Injection
+28. [deepinstinct/Dirty-Vanity](https://github.com/deepinstinct/Dirty-Vanity) - Process Forking
+29. [Idov31/FunctionStomping](https://github.com/Idov31/FunctionStomping) - Function Stomping
+30. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - Caro-Kann
+31. [StackBombing/StackBombing](https://github.com/StackBombing/StackBombing) - Stack Bombing
 
-### 现代前沿技术
-32. [woldann/GhostInjector](https://github.com/), [woldann/NThread](https://github.com/), [woldann/NThreadOSUtils](https://github.com/), [woldann/Neptune](https://github.com/) - GhostInjector
-33. [c0de90e7/GhostWriting](https://github.com/) - GhostWriting
-34. [fern89/ghostwriting-2](https://github.com/) - GhostWriting-2
-35. [antonioCoco/Mapping-Injection](https://github.com/) - Mapping Injection (Enhanced)
-36. [OtterHacker/SetProcessInjection](https://github.com/) - SetProcessInjection
+### 现代前沿技术 (32-41)
+32. [woldann/GhostInjector](https://github.com/woldann/GhostInjector) - GhostInjector (依赖: NThread, NThreadOSUtils, Neptune)
+33. [c0de90e7/GhostWriting](https://github.com/c0de90e7/GhostWriting) - GhostWriting
+34. [fern89/ghostwriting-2](https://github.com/fern89/ghostwriting-2) - GhostWriting-2
+35. [antonioCoco/Mapping-Injection](https://github.com/antonioCoco/Mapping-Injection) - Mapping Injection (增强版)
+36. [OtterHacker/SetProcessInjection](https://github.com/OtterHacker/SetProcessInjection) - SetProcessInjection
 37. [SafeBreach-Labs/PoolParty](https://github.com/SafeBreach-Labs/PoolParty) - PoolParty
 38. [hasherezade/thread_namecalling](https://github.com/hasherezade/thread_namecalling) - Thread Name-Calling
 39. [hasherezade/waiting_thread_hijacking](https://github.com/hasherezade/waiting_thread_hijacking) - Waiting Thread Hijacking
