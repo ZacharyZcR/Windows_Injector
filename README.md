@@ -1,79 +1,81 @@
-# Windows Process Injection Techniques
+# Windows 进程注入技术集合
 
-A comprehensive collection of 41 Windows process injection techniques implemented in C, covering classic methods to cutting-edge research.
+[English](./README_EN.md) | 简体中文
 
-## Overview
+全面收集 41 种 Windows 进程注入技术的 C 语言实现，涵盖经典方法到前沿研究。
 
-This repository contains complete implementations of Windows process injection techniques, systematically organized from fundamental concepts to advanced evasion methods. Each technique is a standalone implementation with detailed documentation explaining the underlying mechanics, detection strategies, and practical applications.
+## 项目介绍
 
-**Not a penetration testing framework**. Not a red team toolkit. This is a reference implementation for understanding Windows internals, security research, and defensive programming.
+本仓库包含 Windows 进程注入技术的完整实现，从基础概念到高级规避方法系统化组织。每个技术都是独立实现，配有详细文档，解释底层机制、检测策略和实际应用。
 
-## Project Statistics
+**这不是渗透测试框架**。不是红队工具包。这是用于理解 Windows 内部机制、安全研究和防御性编程的参考实现。
 
-- **41 Technique Implementations**: 100% working, real-world code
-- **Language**: Pure C with minimal dependencies
-- **Target Platform**: Windows x64 (with x86 support where applicable)
-- **Build System**: MinGW/GCC compatible
+## 项目统计
 
-## Technique Categories
+- **41 种技术实现**: 100% 真实可用代码
+- **编程语言**: 纯 C 语言，最小化依赖
+- **目标平台**: Windows x64（部分支持 x86）
+- **构建系统**: MinGW/GCC 兼容
 
-### Process Manipulation (1-5)
-Advanced attacks leveraging Windows process creation mechanisms:
-1. **Process Hollowing**
-2. **Transacted Hollowing**
-3. **Process Doppelgänging**
-4. **Process Herpaderping**
-5. **Process Ghosting**
+## 技术分类
 
-### Early Execution and Callback (6-10)
-Hijacking execution flow during process/thread initialization:
-6. **Early Bird APC**
-7. **Entry Point Injection**
-8. **DLL Blocking (Ruy-Lopez)**
-9. **Early Cascade**
-10. **Kernel Callback Table**
+### 进程操纵技术 (1-5)
+利用 Windows 进程创建机制的高级攻击：
+1. **Process Hollowing** - 进程镂空
+2. **Transacted Hollowing** - 事务镂空
+3. **Process Doppelgänging** - 进程伪装
+4. **Process Herpaderping** - 进程篡改
+5. **Process Ghosting** - 进程幽灵化
 
-### Classic Injection (11-20)
-Foundational Windows injection methods:
-11. **Advanced Hollowing**
-12. **DLL Injection**
-13. **Shellcode Injection**
-14. **SetWindowsHookEx**
-15. **Reflective DLL Injection**
-16. **PE Injection**
-17. **Mapping Injection**
-18. **APC Queue Injection**
-19. **Thread Hijacking**
-20. **Atom Bombing**
+### 早期执行和回调技术 (6-10)
+在进程/线程初始化阶段劫持执行流：
+6. **Early Bird APC** - 早期鸟 APC 注入
+7. **Entry Point Injection** - 入口点注入
+8. **DLL Blocking (Ruy-Lopez)** - DLL 阻断注入
+9. **Early Cascade** - 早期级联注入
+10. **Kernel Callback Table** - 内核回调表注入
 
-### Advanced Evasion (21-31)
-Innovative methods to bypass modern security defenses:
-21. **Mockingjay** - RWX Section Injection
-22. **PowerLoaderEx** - Shared Desktop Heap Injection
-23. **Threadless Inject**
-24. **EPI** - DLL Entry Point Hijacking
-25. **DLL Notification Injection**
-26. **Module Stomping**
-27. **Gadget APC Injection**
-28. **Process Forking (Dirty Vanity)**
-29. **Function Stomping**
-30. **Caro-Kann** - Encrypted Shellcode Memory Scan Evasion
-31. **Stack Bombing**
+### 经典注入技术 (11-20)
+Windows 注入技术的基础方法：
+11. **Advanced Hollowing** - 高级镂空
+12. **DLL Injection** - DLL 注入
+13. **Shellcode Injection** - Shellcode 注入
+14. **SetWindowsHookEx** - 钩子注入
+15. **Reflective DLL Injection** - 反射式 DLL 注入
+16. **PE Injection** - PE 注入
+17. **Mapping Injection** - 映射注入
+18. **APC Queue Injection** - APC 队列注入
+19. **Thread Hijacking** - 线程劫持
+20. **Atom Bombing** - 原子轰炸
 
-### Modern Cutting-Edge (32-41)
-Latest security research from 2023-2024:
-32. **GhostInjector**
-33. **GhostWriting**
-34. **GhostWriting-2**
-35. **Mapping Injection** (Enhanced)
-36. **SetProcessInjection** - ProcessInstrumentationCallback Injection
-37. **PoolParty** - Windows Thread Pool Injection (TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT)
-38. **Thread Name-Calling**
-39. **Waiting Thread Hijacking**
-40. **RedirectThread** - CONTEXT-Only Injection (ROP Gadget + DLL Pointer)
-41. **LdrShuffle** - EntryPoint Hijacking
+### 高级规避技术 (21-31)
+绕过现代安全防护的创新方法：
+21. **Mockingjay** - RWX 节区注入
+22. **PowerLoaderEx** - 共享桌面堆注入
+23. **Threadless Inject** - 无线程注入
+24. **EPI** - DLL 入口点劫持注入
+25. **DLL Notification Injection** - DLL 通知回调注入
+26. **Module Stomping** - 模块践踏注入
+27. **Gadget APC Injection** - Gadget APC 注入
+28. **Process Forking (Dirty Vanity)** - 进程分叉注入
+29. **Function Stomping** - 函数践踏注入
+30. **Caro-Kann** - 加密 Shellcode 内存扫描规避
+31. **Stack Bombing** - 栈轰炸注入
 
-## Project Structure
+### 现代前沿技术 (32-41)
+2023-2024 年最新安全研究成果：
+32. **GhostInjector** - 幽灵注入器
+33. **GhostWriting** - 幽灵写入
+34. **GhostWriting-2** - 改进版幽灵写入
+35. **Mapping Injection** - 映射注入（增强版）
+36. **SetProcessInjection** - ProcessInstrumentationCallback 注入
+37. **PoolParty** - Windows 线程池注入（TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT）
+38. **Thread Name-Calling** - 线程名称注入
+39. **Waiting Thread Hijacking** - 等待线程劫持
+40. **RedirectThread** - CONTEXT-Only 注入（ROP Gadget + DLL 指针注入）
+41. **LdrShuffle** - EntryPoint 劫持
+
+## 项目结构
 
 ```
 Injection/
@@ -90,25 +92,25 @@ Injection/
 └── TECHNIQUE_VERIFICATION.md
 ```
 
-Each technique directory contains:
-- **src/**: Complete source code implementation
-- **build.bat/build.sh**: Standalone build script
-- **README.md**: Detailed technical documentation
-- **Executable**: Compiled binary (after building)
+每个技术目录包含：
+- **src/**: 完整源代码实现
+- **build.bat/build.sh**: 独立构建脚本
+- **README.md**: 详细技术文档
+- **可执行文件**: 编译后的二进制文件
 
-## Building
+## 构建说明
 
-### Prerequisites
-- MinGW-w64 (GCC for Windows)
-- Windows SDK headers
+### 前置要求
+- MinGW-w64（Windows 版 GCC）
+- Windows SDK 头文件
 
-### Build Single Technique
+### 构建单个技术
 ```batch
 cd techniques\01-process-hollowing
 build.bat
 ```
 
-### Build All Techniques
+### 构建所有技术
 ```batch
 for /d %d in (techniques\*) do (
     if exist "%d\build.bat" (
@@ -117,75 +119,75 @@ for /d %d in (techniques\*) do (
 )
 ```
 
-## Usage
+## 使用方法
 
-Each technique is a standalone executable demonstrating the injection method:
+每个技术都是独立可执行文件，演示注入方法：
 
 ```batch
 cd techniques\41-ldrshuffle
 ldrshuffle.exe
 ```
 
-Most implementations include:
-- **Verbose Output**: Shows each step of the injection process
-- **Error Handling**: Explains why operations fail
-- **Safety Checks**: Validates prerequisites before execution
+大多数实现包含：
+- **详细输出**: 显示注入过程的每一步
+- **错误处理**: 解释操作失败的原因
+- **安全检查**: 执行前验证前置条件
 
-## Documentation
+## 文档说明
 
-- **README.md**: This file - project overview
-- **README_CN.md**: Chinese version of this document
-- **TECHNIQUE_VERIFICATION.md**: Detailed technical breakdown of all 41 techniques
-- **techniques/XX-name/README.md**: Per-technique deep dive with execution flow diagrams
+- **README.md**: 本文件 - 项目概览（中文）
+- **README_EN.md**: 英文版项目概览
+- **TECHNIQUE_VERIFICATION.md**: 所有 41 种技术的详细技术分解
+- **techniques/XX-name/README.md**: 单个技术的深入解析，包含执行流程图
 
-## Security Notice
+## 安全声明
 
-**This repository is for educational and defensive security research only.**
+**本仓库仅用于教育和防御性安全研究。**
 
-These techniques are implemented to:
-- Understand Windows security internals
-- Develop detection strategies
-- Improve endpoint protection
-- Train security professionals
+这些技术的实现目的是：
+- 理解 Windows 安全内部机制
+- 开发检测策略
+- 改进端点保护
+- 培训安全专业人员
 
-Unauthorized use of these techniques for illegal access is unlawful and unethical.
+未经授权使用这些技术进行非法访问是违法和不道德的。
 
-## Reference Repositories
+## 参考仓库
 
-Each technique in this project is based on original research implementations. Below is the complete list of all reference repositories (sorted by technique number):
+本项目的每个技术都基于原始研究实现。以下是所有参考仓库的完整列表（按技术编号排序）：
 
-### Process Manipulation (1-5)
+### 进程操纵技术 (1-5)
 1. [m0n0ph1/Process-Hollowing](https://github.com/m0n0ph1/Process-Hollowing) - Process Hollowing
 2. [hasherezade/transacted_hollowing](https://github.com/hasherezade/transacted_hollowing) - Transacted Hollowing
 3. [hasherezade/process_doppelganging](https://github.com/hasherezade/process_doppelganging) - Process Doppelgänging
 4. [jxy-s/herpaderping](https://github.com/jxy-s/herpaderping) - Process Herpaderping
 5. [hasherezade/process_ghosting](https://github.com/hasherezade/process_ghosting) - Process Ghosting
 
-### Early Execution and Callback (6-10)
-6. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - Early Bird APC (includes Ruy-Lopez/HookForward)
+### 早期执行和回调技术 (6-10)
+6. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - Early Bird APC (包含 Ruy-Lopez/HookForward)
 7. [diversenok/Suspending-Techniques](https://github.com/diversenok/Suspending-Techniques) - Entry Point Injection (AddressOfEntryPoint-injection)
-8. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - DLL Blocking (includes Ruy-Lopez/DllBlock)
+8. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - DLL Blocking (包含 Ruy-Lopez/DllBlock)
 9. [D1rkMtr/earlycascade-injection](https://github.com/D1rkMtr/earlycascade-injection) - Early Cascade
 10. [odzhan/injection](https://github.com/odzhan/injection) - Kernel Callback Table (KernelCallbackTable-Injection-PoC)
 
-### Classic Injection (11-20)
+### 经典注入技术 (11-20)
 11. [snovvcrash/PichichiH0ll0wer](https://github.com/snovvcrash/PichichiH0ll0wer) - Advanced Hollowing (Nim)
-12. [stephenfewer/ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection) - DLL Injection (also used for Reflective DLL Injection)
-13. [rapid7/metasploit-framework](https://github.com/rapid7/metasploit-framework) - Shellcode Injection (reference)
-14. [hfiref0x/WinObjEx64](https://github.com/hfiref0x/WinObjEx64) - SetWindowsHookEx (reference)
+12. [stephenfewer/ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection) - DLL Injection (也用于反射式DLL注入)
+13. [rapid7/metasploit-framework](https://github.com/rapid7/metasploit-framework) - Shellcode Injection (参考)
+14. [hfiref0x/WinObjEx64](https://github.com/hfiref0x/WinObjEx64) - SetWindowsHookEx (参考)
 15. [stephenfewer/ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection) - Reflective DLL Injection
 16. [NUL0x4C/PE-Injection](https://github.com/NUL0x4C/PE-Injection) - PE Injection
-17. [hasherezade/process_doppelganging](https://github.com/hasherezade/process_doppelganging) - Mapping Injection (reference)
+17. [hasherezade/process_doppelganging](https://github.com/hasherezade/process_doppelganging) - Mapping Injection (参考)
 18. [Kudaes/Rust-APC-Queue-Injection](https://github.com/Kudaes/Rust-APC-Queue-Injection) - APC Queue Injection (Rust)
 19. [iGh0st/ThreadHijacking](https://github.com/iGh0st/ThreadHijacking) - Thread Hijacking (C#)
 20. [BreakingMalwareResearch/atom-bombing](https://github.com/BreakingMalwareResearch/atom-bombing) - Atom Bombing
 
-### Advanced Evasion (21-31)
+### 高级规避技术 (21-31)
 21. [secur30nly/Mockingjay](https://github.com/secur30nly/Mockingjay) - Mockingjay
 22. [BreakingMalware/PowerLoaderEx](https://github.com/BreakingMalware/PowerLoaderEx) - PowerLoaderEx
 23. [CCob/ThreadlessInject](https://github.com/CCob/ThreadlessInject) - Threadless Inject
 24. [Kudaes/EPI](https://github.com/Kudaes/EPI) - EPI
-25. [Dec0ne/DllNotificationInjection](https://github.com/Dec0ne/DllNotificationInjection) and [ShorSec/DllNotificationInjection](https://github.com/ShorSec/DllNotificationInjection) - DLL Notification Injection
+25. [Dec0ne/DllNotificationInjection](https://github.com/Dec0ne/DllNotificationInjection) 和 [ShorSec/DllNotificationInjection](https://github.com/ShorSec/DllNotificationInjection) - DLL Notification Injection
 26. [D1rkMtr/D1rkInject](https://github.com/D1rkMtr/D1rkInject) - Module Stomping
 27. [LloydLabs/ntqueueapcthreadex-ntdll-gadget-injection](https://github.com/LloydLabs/ntqueueapcthreadex-ntdll-gadget-injection) - Gadget APC Injection
 28. [deepinstinct/Dirty-Vanity](https://github.com/deepinstinct/Dirty-Vanity) - Process Forking
@@ -193,11 +195,11 @@ Each technique in this project is based on original research implementations. Be
 30. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - Caro-Kann
 31. [StackBombing/StackBombing](https://github.com/StackBombing/StackBombing) - Stack Bombing
 
-### Modern Cutting-Edge (32-41)
-32. [woldann/GhostInjector](https://github.com/woldann/GhostInjector) - GhostInjector (dependencies: NThread, NThreadOSUtils, Neptune)
+### 现代前沿技术 (32-41)
+32. [woldann/GhostInjector](https://github.com/woldann/GhostInjector) - GhostInjector (依赖: NThread, NThreadOSUtils, Neptune)
 33. [c0de90e7/GhostWriting](https://github.com/c0de90e7/GhostWriting) - GhostWriting
 34. [fern89/ghostwriting-2](https://github.com/fern89/ghostwriting-2) - GhostWriting-2
-35. [antonioCoco/Mapping-Injection](https://github.com/antonioCoco/Mapping-Injection) - Mapping Injection (Enhanced)
+35. [antonioCoco/Mapping-Injection](https://github.com/antonioCoco/Mapping-Injection) - Mapping Injection (增强版)
 36. [OtterHacker/SetProcessInjection](https://github.com/OtterHacker/SetProcessInjection) - SetProcessInjection
 37. [SafeBreach-Labs/PoolParty](https://github.com/SafeBreach-Labs/PoolParty) - PoolParty
 38. [hasherezade/thread_namecalling](https://github.com/hasherezade/thread_namecalling) - Thread Name-Calling
@@ -205,71 +207,71 @@ Each technique in this project is based on original research implementations. Be
 40. [Friends-Security/RedirectThread](https://github.com/Friends-Security/RedirectThread) - RedirectThread
 41. [RWXstoned/LdrShuffle](https://github.com/RWXstoned/LdrShuffle) - LdrShuffle
 
-## Acknowledgments
+## 特别感谢
 
-### Researchers and Organizations
-- **@hasherezade** - Multiple pioneering research contributions in Windows process injection (Process Doppelgänging, Transacted Hollowing, Process Ghosting, Waiting Thread Hijacking, Thread Name-Calling)
-- **SafeBreach Labs** - Complete PoolParty technique suite implementation
-- **@RWXstoned** - LdrShuffle EntryPoint hijacking technique
-- **Friends-Security** - RedirectThread CONTEXT-Only injection research
-- **@stephenfewer** - Reflective DLL Injection, the foundation of modern in-memory execution
-- **BreakingMalware Research** - AtomBombing and PowerLoaderEx
-- **@jxy-s** - Process Herpaderping timing attack
-- **@m0n0ph1** - Classic Process Hollowing implementation
-- **@CCob** - Threadless Inject technique
-- **@Idov31** - Function Stomping technique
-- **@S3cur3Th1sSh1t** - Caro-Kann encrypted evasion
-- **@antonioCoco** - Enhanced Mapping Injection
-- **All other researchers** - Contributions in their respective domains
+### 研究者与组织
+- **@hasherezade** - 在 Windows 进程注入领域的多项开创性研究（Process Doppelgänging, Transacted Hollowing, Process Ghosting, Waiting Thread Hijacking, Thread Name-Calling）
+- **SafeBreach Labs** - PoolParty 技术套件的完整实现
+- **@RWXstoned** - LdrShuffle EntryPoint 劫持技术
+- **Friends-Security** - RedirectThread CONTEXT-Only 注入研究
+- **@stephenfewer** - Reflective DLL Injection，现代内存注入的基石
+- **BreakingMalware Research** - AtomBombing 和 PowerLoaderEx
+- **@jxy-s** - Process Herpaderping 时序攻击
+- **@m0n0ph1** - Process Hollowing 经典实现
+- **@CCob** - Threadless Inject 无线程注入
+- **@Idov31** - Function Stomping 技术
+- **@S3cur3Th1sSh1t** - Caro-Kann 加密规避
+- **@antonioCoco** - Mapping Injection 增强版
+- **所有其他研究者** - 在各自领域的贡献
 
-### Community Resources
-- [Pinvoke.net](http://pinvoke.net/) - Win32 API reference
+### 社区资源
+- [Pinvoke.net](http://pinvoke.net/) - Win32 API 参考
 - [Undocumented NT Functions](http://undocumented.ntinternals.net/)
 - [Windows Internals Book Series](https://docs.microsoft.com/en-us/sysinternals/resources/windows-internals) by Mark Russinovich
 - [Black Hat 2019 - Process Injection Techniques](https://i.blackhat.com/USA-19/Thursday/us-19-Kotler-Process-Injection-Techniques-Gotta-Catch-Them-All.pdf)
 - [DEF CON 23 - Injection on Steroids](https://www.youtube.com/watch?v=6nZw5qLYMm4)
 
-### Development Tools
-This project was developed using **[Claude Code](https://claude.com/claude-code)**, Anthropic's official AI programming assistant. Claude Code provided critical support in:
-- Code implementation and debugging
-- Technical documentation writing
-- Project structure organization
-- Security best practice recommendations
+### 开发工具
+本项目使用 **[Claude Code](https://claude.com/claude-code)** 开发，这是 Anthropic 的官方 AI 编程助手。Claude Code 在以下方面提供了关键支持：
+- 代码实现和调试
+- 技术文档编写
+- 项目结构组织
+- 安全最佳实践建议
 
-## Why C?
+## 为什么选择 C 语言？
 
-- **Minimal Dependencies**: No runtime, no frameworks, just Windows APIs
-- **Transparency**: Every operation is explicit
-- **Educational**: Shows exactly what's happening at the API level
-- **Portability**: Works with any C compiler (MinGW, MSVC, Clang)
+- **最小化依赖**: 无运行时、无框架，只有 Windows API
+- **透明性**: 每个操作都是显式的
+- **教育性**: 准确展示 API 层面发生的事情
+- **可移植性**: 适用于任何 C 编译器（MinGW、MSVC、Clang）
 
-## Roadmap
+## 发展路线
 
-This project is feature-complete with 41 techniques. Future work may include:
+本项目已完成 41 种技术的实现。未来可能包括：
 
-- [ ] ARM64 Windows support
-- [ ] Kernel-mode injection techniques
-- [ ] Enhanced detection evasion analysis
-- [ ] Performance benchmarking suite
+- [ ] ARM64 Windows 支持
+- [ ] 内核模式注入技术
+- [ ] 增强的检测规避分析
+- [ ] 性能基准测试套件
 
-## Contributing
+## 贡献指南
 
-Contributions are welcome for:
-- Bug fixes in existing implementations
-- Documentation improvements
-- New technique implementations (with original research attribution)
-- Detection strategy enhancements
+欢迎以下贡献：
+- 现有实现的 bug 修复
+- 文档改进
+- 新技术实现（需附原始研究归属）
+- 检测策略增强
 
-Please ensure:
-1. Code compiles with MinGW-w64
-2. New techniques include detailed README.md
-3. Proper attribution for research sources
-4. Testing on Windows 10/11
+请确保：
+1. 代码能用 MinGW-w64 编译
+2. 新技术配有详细的 README.md
+3. 正确归属研究来源
+4. 在 Windows 10/11 上测试
 
-## License
+## 许可证
 
-This project is for educational purposes. Individual techniques may have different licenses - see each technique's README for details.
+本项目用于教育目的。各个技术可能有不同的许可证 - 详见各技术的 README。
 
 ---
 
-**Research, Learn, Defend.**
+**研究、学习、防御。**
