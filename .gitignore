@@ -28,10 +28,14 @@ Desktop.ini
 *.swo
 *~
 
+# Claude Code
+.claude/
+
 # Build directories
 build/
 bin/
 obj/
+cmake-build-debug/
 
 # Logs
 *.log
