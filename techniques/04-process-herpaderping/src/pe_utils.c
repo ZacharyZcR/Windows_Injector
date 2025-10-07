@@ -43,7 +43,9 @@ BYTE* ReadFileToBuffer(const WCHAR* filePath, DWORD* fileSize) {
     }
 
     CloseHandle(hFile);
-    *fileSize = size;
+    if (fileSize) {
+        *fileSize = size;
+    }
     return buffer;
 }
 
