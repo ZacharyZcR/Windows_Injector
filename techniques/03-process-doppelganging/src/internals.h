@@ -35,26 +35,21 @@
 
 // ===== 扩展的 PEB 结构（包含 ImageBaseAddress） =====
 typedef struct _MY_PEB {
-    BYTE Reserved1[2];
-    BYTE BeingDebugged;
-    BYTE Reserved2[1];
-    PVOID Reserved3[2];
-    PVOID Ldr;
-    PVOID ProcessParameters;
-    PVOID Reserved4[3];
-    PVOID AtlThunkSListPtr;
-    PVOID Reserved5;
-    ULONG Reserved6;
-    PVOID Reserved7;
-    ULONG Reserved8;
-    ULONG AtlThunkSListPtr32;
-    PVOID Reserved9[45];
-    BYTE Reserved10[96];
-    PVOID PostProcessInitRoutine;
-    BYTE Reserved11[128];
-    PVOID Reserved12[1];
-    ULONG SessionId;
-    PVOID ImageBaseAddress;  // 关键字段
+    BOOLEAN InheritedAddressSpace;      // 0x00
+    BOOLEAN ReadImageFileExecOptions;   // 0x01
+    BOOLEAN BeingDebugged;              // 0x02
+    BOOLEAN SpareBool;                  // 0x03
+    BYTE Padding0[4];                   // 0x04 对齐到 8 字节
+    HANDLE Mutant;                      // 0x08
+    PVOID ImageBaseAddress;             // 0x10 关键字段！
+    PVOID Ldr;                          // 0x18
+    PVOID ProcessParameters;            // 0x20
+    PVOID SubSystemData;                // 0x28
+    PVOID ProcessHeap;                  // 0x30
+    PVOID FastPebLock;                  // 0x38
+    PVOID AtlThunkSListPtr;             // 0x40
+    PVOID IFEOKey;                      // 0x48
+    // ... 更多字段
 } MY_PEB, *PMY_PEB;
 
 // ===== 扩展的 RTL_USER_PROCESS_PARAMETERS 结构 =====
@@ -165,12 +160,29 @@ typedef NTSTATUS (NTAPI *_RtlCreateProcessParametersEx)(
     ULONG Flags
 );
 
+/**
+ * 创建用户线程（备选方案）
+ */
+typedef NTSTATUS (NTAPI *_RtlCreateUserThread)(
+    HANDLE ProcessHandle,
+    PSECURITY_DESCRIPTOR SecurityDescriptor,
+    BOOLEAN CreateSuspended,
+    ULONG StackZeroBits,
+    SIZE_T StackReserve,
+    SIZE_T StackCommit,
+    PVOID StartAddress,
+    PVOID Parameter,
+    PHANDLE ThreadHandle,
+    PVOID ClientId
+);
+
 // ===== 全局函数指针 =====
 extern _NtCreateSection NtCreateSection;
 extern _NtCreateProcessEx NtCreateProcessEx;
 extern _NtCreateThreadEx NtCreateThreadEx;
 extern _NtReadVirtualMemory NtReadVirtualMemory;
 extern _RtlCreateProcessParametersEx RtlCreateProcessParametersEx;
+extern _RtlCreateUserThread RtlCreateUserThread;
 
 /**
  * 初始化所有 NT API 函数指针

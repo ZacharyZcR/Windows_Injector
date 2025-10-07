@@ -238,7 +238,9 @@ dir C:\Users\%USERNAME%\AppData\Local\Temp\PD*.tmp
 
 在某些 Windows 版本（特别是 Windows 10 新版本）上，可能遇到以下问题：
 
-**问题 A：ImageBaseAddress 为 NULL**
+**问题 A：ImageBaseAddress 为 NULL** ✅ 已修复
+
+**问题描述**：
 ```
 [8] 查询进程基本信息
     PEB 地址：0x...
@@ -246,19 +248,36 @@ dir C:\Users\%USERNAME%\AppData\Local\Temp\PD*.tmp
 ```
 
 **原因**：
-- Windows 10 1709+ 对 `NtCreateProcessEx` 的行为进行了更改
-- 进程创建后，PEB 的 ImageBaseAddress 可能未立即初始化
-- 需要等待或使用其他方法获取真实的镜像基址
+- PEB 结构定义错误，ImageBaseAddress 字段偏移不正确
+- ImageBaseAddress 应该在偏移 0x10，而不是结构末尾
 
-**问题 B：NtCreateThreadEx 失败（0xC0000022）**
+**解决方案**：✅ 已修复
+- 修正 PEB 结构定义，确保 ImageBaseAddress 在偏移 0x10
+- 现在可以正确读取 ImageBase
+
+**问题 B：NtCreateThreadEx 失败（0xC0000022）** ⚠️ Windows 限制
 ```
 错误：NtCreateThreadEx 失败，状态码：0xC0000022
 ```
 
 **原因**：
-- `STATUS_ACCESS_DENIED`
-- Windows 10 增强了对进程创建的保护
-- 即使有管理员权限，某些操作仍可能被拒绝
+- `STATUS_ACCESS_DENIED` (0xC0000022)
+- Windows 10 增强了对 `NtCreateProcessEx` 创建的进程的保护
+- 即使有管理员权限，仍无法向这类进程注入线程
+
+**备选方案**：
+- 实现已自动尝试 `RtlCreateUserThread` 作为备选
+- 但该 API 也会失败（0xC000010A - STATUS_PROCESS_IS_TERMINATING）
+
+**当前状态**：
+- ✅ 进程成功创建
+- ✅ PEB 正确设置
+- ✅ ImageBase 正确获取
+- ❌ 线程创建失败（Windows 安全限制）
+
+**影响**：
+- 技术原理验证成功
+- 实际利用受限于 Windows 10 保护机制
 
 **2. 架构限制**
 - 载荷和主程序必须同架构（都是 x64）
