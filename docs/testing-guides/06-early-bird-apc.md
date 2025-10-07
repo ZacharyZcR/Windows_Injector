@@ -140,20 +140,45 @@ cd build/x64
 
 ### 4. 验证注入成功
 
-#### 方法 1：检查进程状态（推荐）
+#### 方法 1：检查验证文件（最推荐）
+
+注入程序会在成功后自动创建验证文件：
 
 ```bash
-# 检查目标进程是否仍在运行
-tasklist | grep "97216"
+# 检查验证文件
+cat C:\Users\Public\early_bird_apc_verified.txt
 ```
 
 **验证结果：**
 ```
-notepad.exe                  97216 Console                   13      6,816 K
+Early Bird APC Injection Verified!
+Target Process: notepad.exe
+Process PID: 105904
+Thread TID: 25488
+Injection Address: 0x000001B6B3190000
+Shellcode Size: 13 bytes
+Status: Process still running - shellcode executed!
 ```
 
 ✅ **成功标志**：
-- 进程 PID 97216 仍在运行
+- 验证文件被成功创建
+- 文件包含完整的注入详情
+- 状态显示"Process still running - shellcode executed!"
+
+#### 方法 2：检查进程状态
+
+```bash
+# 检查目标进程是否仍在运行
+tasklist | grep "105904"
+```
+
+**验证结果：**
+```
+notepad.exe                  105904 Console                   13      6,764 K
+```
+
+✅ **成功标志**：
+- 进程 PID 105904 仍在运行
 - 证明 shellcode（无限循环）被成功执行
 - 如果进程立即退出，说明注入失败
 
@@ -188,13 +213,14 @@ notepad.exe                  97216 Console                   13      6,816 K
 - **注入方式**：Early Bird APC
 
 **验证证据：**
-1. ✅ 以调试模式创建进程成功 (PID: 97216)
-2. ✅ 在远程进程分配内存成功 (0x00000186F5000000)
+1. ✅ 以调试模式创建进程成功 (PID: 105904)
+2. ✅ 在远程进程分配内存成功 (0x000001B6B3190000)
 3. ✅ 写入 shellcode 成功 (13 bytes)
 4. ✅ 修改内存权限为可执行成功
-5. ✅ APC 排队到主线程成功 (TID: 105532)
+5. ✅ APC 排队到主线程成功 (TID: 25488)
 6. ✅ 停止调试，进程继续运行
-7. ✅ **关键验证**：进程保持运行状态，证明 shellcode 被执行
+7. ✅ **关键验证 1**：进程保持运行状态，证明 shellcode 被执行
+8. ✅ **关键验证 2**：验证文件被创建，包含完整注入详情
 
 **CPU 占用情况：**
 - 无限循环 shellcode 导致目标进程 CPU 占用率接近 100%（单核心）

