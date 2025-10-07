@@ -1,5 +1,13 @@
 # Process Doppelgänging (进程变脸) - 技术文档
 
+> ⚠️ **重要提示**：此技术在 **Windows 10 及以上版本已失效**
+>
+> - **失效原因**：Windows 10 增强了对 `NtCreateProcessEx` 创建进程的保护
+> - **具体表现**：进程可以创建，但无法注入线程执行代码
+> - **错误码**：`NtCreateThreadEx` 返回 `0xC0000022` (STATUS_ACCESS_DENIED)
+> - **验证情况**：原始实现（hasherezade）在 Windows 10 上也失效
+> - **研究价值**：技术原理仍具有学习价值，了解 Windows 内核机制
+
 ## 技术概述
 
 Process Doppelgänging（进程变脸）是 2017 年 Black Hat Europe 大会上由 enSilo 研究团队披露的高级代码注入技术，被认为是最隐蔽的进程注入技术之一。
@@ -216,9 +224,27 @@ dir C:\Users\%USERNAME%\AppData\Local\Temp\PD*.tmp
 
 ## 预期效果
 
-### 成功场景
+### ⚠️ Windows 10+ 实际表现
 
-**正常执行**：
+**当前执行结果**（Windows 10 及以上）：
+1. ✅ 创建事务性文件
+2. ✅ 写入 PE 数据
+3. ✅ 创建 SEC_IMAGE 内存节
+4. ✅ 回滚事务，文件消失
+5. ✅ 从内存节创建进程（NtCreateProcessEx 成功）
+6. ✅ 读取 PEB，获取 ImageBase
+7. ✅ 设置进程参数
+8. ❌ **线程创建失败**（NtCreateThreadEx 被拒绝）
+
+**实际表现**：
+- 进程成功创建并出现在任务管理器
+- 进程无文件路径关联（符合预期）
+- 但进程立即退出（无线程执行代码）
+- 不会弹出 MessageBox
+
+### 理论成功场景（仅 Windows 7/8）
+
+**在旧版 Windows 上的预期行为**：
 1. 创建事务性文件（短暂存在）
 2. 写入 PE 数据
 3. 创建 SEC_IMAGE 内存节
@@ -445,20 +471,38 @@ if (GetProcessImageFileName(hProcess) == NULL) {
 
 Process Doppelgänging 代表了进程注入技术的巅峰，通过结合 NTFS 事务和未公开的 `NtCreateProcessEx` API，实现了完全无文件关联的进程创建。
 
-**优势**：
+### ⚠️ 当前状态（2024）
+
+**Windows 10+ 系统**：
+- ❌ **技术已失效** - 无法在目标进程中执行代码
+- ✅ 进程创建成功
+- ❌ 线程注入被阻止（系统安全机制）
+
+**Windows 7/8 系统**：
+- ✅ 理论上仍然有效（未验证）
+- 需在旧版系统上测试
+
+**技术价值**：
+- ✅ 学习 Windows 内核机制
+- ✅ 理解 NTFS 事务原理
+- ✅ 了解系统演进的安全防护
+- ❌ 不再具有实战价值（Windows 10+）
+
+**优势**（理论）：
 - 最高隐蔽性（完全匿名进程）
 - 无可疑内存操作
 - 稳定性高（Windows 自动加载 PE）
 
 **挑战**：
 - 实现复杂度高
-- Windows 版本兼容性问题
+- **Windows 10+ 已失效**（关键限制）
 - 需要管理员权限
 - 现代 EDR 可以检测
 
 **研究价值**：
 - 深入理解 Windows 内核进程创建机制
 - 了解 NTFS 事务的安全隐患
+- 学习 Windows 安全演进历程
 - 研究防御和检测方法
 
-这项技术揭示了 Windows 系统的深层机制，对于安全研究人员和防御者都具有重要的学习价值。
+这项技术虽然在现代系统上已失效，但仍揭示了 Windows 系统的深层机制，对于理解系统安全演进具有重要的历史和教育价值。
