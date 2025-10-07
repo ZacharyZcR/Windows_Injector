@@ -1,0 +1,37 @@
+# Compiled executables
+*.exe
+
+# Object files
+*.o
+*.obj
+
+# Libraries
+*.lib
+*.a
+
+# Debug files
+*.pdb
+*.ilk
+
+# MinGW/GCC build artifacts
+*.d
+*.su
+
+# Windows specific
+Thumbs.db
+Desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build directories
+build/
+bin/
+obj/
+
+# Logs
+*.log

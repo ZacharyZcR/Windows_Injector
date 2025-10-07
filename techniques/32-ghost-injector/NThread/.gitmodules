@@ -1,0 +1,3 @@
+[submodule "tests/Neptune"]
+	path = tests/Neptune
+	url = https://github.com/woldann/Neptune

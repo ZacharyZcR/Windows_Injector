@@ -1,0 +1,161 @@
+#include <windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// MessageBox shellcode (x64)
+unsigned char messagebox_shellcode[] = {
+    0x48, 0x83, 0xEC, 0x28,                         // sub rsp, 0x28
+    0x48, 0x31, 0xC9,                               // xor rcx, rcx
+    0x48, 0x8D, 0x15, 0x1A, 0x00, 0x00, 0x00,       // lea rdx, [rip+0x1A]
+    0x4C, 0x8D, 0x05, 0x27, 0x00, 0x00, 0x00,       // lea r8, [rip+0x27]
+    0x48, 0x31, 0xC9,                               // xor rcx, rcx
+    0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // movabs rax, MessageBoxA
+    0xFF, 0xD0,                                     // call rax
+    0x48, 0x31, 0xC9,                               // xor rcx, rcx
+    0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // movabs rax, ExitThread
+    0xFF, 0xD0,                                     // call rax
+    // Strings
+    0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x66, 0x72,
+    0x6F, 0x6D, 0x20, 0x43, 0x61, 0x72, 0x6F, 0x2D,
+    0x4B, 0x61, 0x6E, 0x6E, 0x21, 0x00,             // "Hello from Caro-Kann!"
+    0x45, 0x6E, 0x63, 0x72, 0x79, 0x70, 0x74, 0x65,
+    0x64, 0x20, 0x53, 0x68, 0x65, 0x6C, 0x6C, 0x63,
+    0x6F, 0x64, 0x65, 0x00                          // "Encrypted Shellcode"
+};
+
+// Calc shellcode (x64)
+unsigned char calc_shellcode[] = {
+    0x48, 0x83, 0xEC, 0x28,                         // sub rsp, 0x28
+    0x48, 0x31, 0xC9,                               // xor rcx, rcx
+    0x48, 0x8D, 0x0D, 0x0E, 0x00, 0x00, 0x00,       // lea rcx, [rip+0x0E]
+    0xBA, 0x01, 0x00, 0x00, 0x00,                   // mov edx, 1
+    0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // movabs rax, WinExec
+    0xFF, 0xD0,                                     // call rax
+    0x48, 0x31, 0xC9,                               // xor rcx, rcx
+    0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // movabs rax, ExitThread
+    0xFF, 0xD0,                                     // call rax
+    // String
+    0x63, 0x61, 0x6C, 0x63, 0x2E, 0x65, 0x78, 0x65, 0x00 // "calc.exe"
+};
+
+void PatchAddresses(unsigned char* shellcode, size_t size, const char* type) {
+    HMODULE hUser32 = LoadLibraryA("user32.dll");
+    HMODULE hKernel32 = LoadLibraryA("kernel32.dll");
+
+    if (strcmp(type, "messagebox") == 0) {
+        FARPROC pMessageBoxA = GetProcAddress(hUser32, "MessageBoxA");
+        FARPROC pExitThread = GetProcAddress(hKernel32, "ExitThread");
+
+        memcpy(shellcode + 0x17, &pMessageBoxA, 8);
+        memcpy(shellcode + 0x27, &pExitThread, 8);
+    }
+    else if (strcmp(type, "calc") == 0) {
+        FARPROC pWinExec = GetProcAddress(hKernel32, "WinExec");
+        FARPROC pExitThread = GetProcAddress(hKernel32, "ExitThread");
+
+        memcpy(shellcode + 0x13, &pWinExec, 8);
+        memcpy(shellcode + 0x21, &pExitThread, 8);
+    }
+
+    FreeLibrary(hUser32);
+    FreeLibrary(hKernel32);
+}
+
+BOOL GenerateShellcode(const char* type, const char* output_file) {
+    unsigned char* shellcode;
+    size_t size;
+
+    if (strcmp(type, "calc") == 0) {
+        shellcode = calc_shellcode;
+        size = sizeof(calc_shellcode);
+        printf("[+] Generating calc.exe shellcode\n");
+    }
+    else if (strcmp(type, "messagebox") == 0) {
+        shellcode = messagebox_shellcode;
+        size = sizeof(messagebox_shellcode);
+        printf("[+] Generating MessageBox shellcode\n");
+    }
+    else {
+        printf("[-] Unknown shellcode type: %s\n", type);
+        return FALSE;
+    }
+
+    unsigned char* patched = (unsigned char*)malloc(size);
+    if (patched == NULL) {
+        printf("[-] Failed to allocate memory\n");
+        return FALSE;
+    }
+
+    memcpy(patched, shellcode, size);
+    PatchAddresses(patched, size, type);
+
+    FILE* file = fopen(output_file, "wb");
+    if (file == NULL) {
+        printf("[-] Failed to open output file: %s\n", output_file);
+        free(patched);
+        return FALSE;
+    }
+
+    size_t written = fwrite(patched, 1, size, file);
+    fclose(file);
+    free(patched);
+
+    if (written != size) {
+        printf("[-] Failed to write shellcode to file\n");
+        return FALSE;
+    }
+
+    printf("[+] Shellcode size: %zu bytes\n", size);
+    printf("[+] Output file: %s\n", output_file);
+    return TRUE;
+}
+
+int main(int argc, char* argv[]) {
+    printf("[+] Caro-Kann Shellcode Generator\n\n");
+
+    if (argc != 2) {
+        printf("Usage: %s <type>\n", argv[0]);
+        printf("\n");
+        printf("Available types:\n");
+        printf("  calc       - Generate calc.exe shellcode\n");
+        printf("  messagebox - Generate MessageBox shellcode\n");
+        printf("  all        - Generate all shellcode types\n");
+        return 1;
+    }
+
+    const char* type = argv[1];
+
+    if (strcmp(type, "all") == 0) {
+        printf("Generating all shellcode types...\n\n");
+
+        if (!GenerateShellcode("calc", "calc_shellcode.bin")) {
+            return 1;
+        }
+        printf("\n");
+
+        if (!GenerateShellcode("messagebox", "messagebox_shellcode.bin")) {
+            return 1;
+        }
+        printf("\n");
+
+        printf("[+] All shellcode generated successfully!\n");
+        printf("\n[!] Next step: Encrypt shellcode using xor_encrypt.exe\n");
+        printf("[!] Example: xor_encrypt.exe calc_shellcode.bin calc_encrypted.bin\n");
+        return 0;
+    }
+    else {
+        char output_file[256];
+        snprintf(output_file, sizeof(output_file), "%s_shellcode.bin", type);
+
+        if (GenerateShellcode(type, output_file)) {
+            printf("\n[+] Shellcode generated successfully!\n");
+            printf("\n[!] Next step: Encrypt shellcode using xor_encrypt.exe\n");
+            printf("[!] Example: xor_encrypt.exe %s %s_encrypted.bin\n", output_file, type);
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+}
