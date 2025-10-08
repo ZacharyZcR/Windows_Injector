@@ -79,7 +79,7 @@ Windows 注入技术的基础方法：
 34. **GhostWriting-2** - 改进版幽灵写入 ❌
 35. **Mapping Injection** - 映射注入（增强版）
 36. **SetProcessInjection** - ProcessInstrumentationCallback 注入
-37. **PoolParty** - Windows 线程池注入（TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT）
+37. **PoolParty** - Windows 线程池注入（TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT）✅
 38. **Thread Name-Calling** - 线程名称注入
 39. **Waiting Thread Hijacking** - 等待线程劫持
 40. **RedirectThread** - CONTEXT-Only 注入（ROP Gadget + DLL 指针注入）

