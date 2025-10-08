@@ -74,9 +74,9 @@ Windows 注入技术的基础方法：
 
 2023-2024 年最新安全研究成果：
 
-32. **GhostInjector** - 幽灵注入器
-33. **GhostWriting** - 幽灵写入
-34. **GhostWriting-2** - 改进版幽灵写入
+32. **GhostInjector** - 幽灵注入器 ❌
+33. **GhostWriting** - 幽灵写入 ❌
+34. **GhostWriting-2** - 改进版幽灵写入 ❌
 35. **Mapping Injection** - 映射注入（增强版）
 36. **SetProcessInjection** - ProcessInstrumentationCallback 注入
 37. **PoolParty** - Windows 线程池注入（TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT）

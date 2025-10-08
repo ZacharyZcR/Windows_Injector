@@ -52,8 +52,21 @@ HANDLE getProcHandlebyName(const char *procName, DWORD *PID) {
     return NULL;
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
     printf("[*] SetProcessInjection - ProcessInstrumentationCallback Injection\n");
+
+    // 检查参数
+    if (argc < 2) {
+        printf("[!] Usage: %s <PID>\n", argv[0]);
+        printf("[!] Example: %s 1234\n", argv[0]);
+        return -1;
+    }
+
+    DWORD PID = atoi(argv[1]);
+    if (PID == 0) {
+        printf("[x] Invalid PID: %s\n", argv[1]);
+        return -1;
+    }
 
     // 获取 ntdll.dll 句柄
     HMODULE hNtdll = GetModuleHandleA("ntdll.dll");
@@ -71,13 +84,15 @@ int main(void) {
     }
 
     // 获取目标进程句柄
-    DWORD PID = 0;
-    HANDLE hProc = getProcHandlebyName("notepad.exe", &PID);
+    printf("[+] Target PID: %lu\n", PID);
+    HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
     if (!hProc) {
-        printf("[x] Cannot open the target process\n");
-        printf("[!] Please start notepad.exe first\n");
+        printf("[x] Cannot open the target process (PID %lu)\n", PID);
+        printf("[x] Error code: %lu\n", GetLastError());
+        printf("[!] Make sure the process exists and you have sufficient privileges\n");
         return -1;
     }
+    printf("[+] Opened target process: PID %lu\n", PID);
 
     printf("[+] Starting ProcessInstrumentationCallback deployment!\n");
 

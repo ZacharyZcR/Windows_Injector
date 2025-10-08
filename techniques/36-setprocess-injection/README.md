@@ -254,8 +254,13 @@ while (1) {
 
 1. **需要系统调用触发**: 必须等待目标进程执行系统调用
 2. **Windows 版本要求**: 仅支持 Windows 10 1703+ (Build 15063+)
-3. **权限要求**: 需要 `PROCESS_ALL_ACCESS` 权限
-4. **自修改内存**: Shellcode 区域需要 RWX 权限（EDR 可能检测）
+3. **Windows 11 兼容性问题** ⚠️:
+   - **已知失败**: Windows 11 Build 26100 (24H2) 及更高版本
+   - **错误代码**: `NtSetInformationProcess` 返回 `0xC0000061` (STATUS_PRIVILEGE_NOT_HELD)
+   - **原因**: 微软在新版本中限制了未文档化的 `ProcessInstrumentationCallback` 功能
+   - **建议**: 在 Windows 10 或更早的 Windows 11 版本（< Build 26100）中测试
+4. **权限要求**: 需要 `PROCESS_ALL_ACCESS` 权限
+5. **自修改内存**: Shellcode 区域需要 RWX 权限（EDR 可能检测）
 
 ## 使用方法
 
@@ -265,17 +270,40 @@ while (1) {
 ./build.sh
 ```
 
+### 测试状态
+
+⚠️ **Windows 11 Build 26100 测试失败**
+
+```
+测试环境: Windows 11 Build 26100 (24H2)
+测试结果: ❌ 失败
+失败原因: NtSetInformationProcess 返回 0xC0000061 (STATUS_PRIVILEGE_NOT_HELD)
+
+所有准备工作成功:
+✅ OpenProcess(PROCESS_ALL_ACCESS)
+✅ VirtualAllocEx (beacon + shellcode)
+✅ WriteProcessMemory
+✅ VirtualProtectEx (RX/RWX)
+❌ NtSetInformationProcess - 系统限制
+
+结论: 这是 Windows 11 的兼容性问题，不是操作错误
+      微软在 Build 26100 中限制了 ProcessInstrumentationCallback
+```
+
 ### 运行
 
 ```bash
 # 1. 启动目标进程
 notepad.exe
 
-# 2. 执行注入
-./setprocess_injection.exe
+# 2. 获取进程 PID
+tasklist | grep notepad.exe
 
-# 3. 与 notepad 交互（点击菜单、输入文字等）触发系统调用
-# 4. MessageBox 将弹出
+# 3. 执行注入（传入 PID）
+./setprocess_injection.exe <PID>
+
+# 4. 与 notepad 交互（点击菜单、输入文字等）触发系统调用
+# 5. MessageBox 将弹出（仅在支持的 Windows 版本）
 ```
 
 ### 预期输出

@@ -1,5 +1,19 @@
 # GhostInjector（幽灵注入器）
 
+## ⚠️ Windows 11 兼容性警告
+
+**状态**: ❌ **不兼容 - Windows 11 操作系统限制**
+
+**失败原因**:
+- Windows 11 限制了 `GetThreadContext`/`SetThreadContext` API
+- 错误码: 0x4764 (NTHREAD_GET_CONTEXT_ERROR)
+- 错误码: 0x4765 (NTHREAD_SET_CONTEXT_ERROR)
+- 即使有调试权限仍无法劫持线程上下文
+
+**详细测试报告**: [docs/testing-guides/32-ghost-injector.md](../../docs/testing-guides/32-ghost-injector.md)
+
+---
+
 ## 技术概述
 
 GhostInjector 是一种极其高级的 DLL 注入技术，通过线程劫持和远程函数调用框架，实现**完全无 CreateRemoteThread、VirtualAllocEx、WriteProcessMemory** 的隐蔽注入。

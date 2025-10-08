@@ -11,8 +11,9 @@ echo ""
 # Check if 32-bit compiler exists
 if command -v i686-w64-mingw32-gcc &> /dev/null; then
     echo "[*] Using i686-w64-mingw32-gcc..."
-    i686-w64-mingw32-gcc src/ghost.c \
-        -o ghostwriting2.exe \
+    mkdir -p build
+    i686-w64-mingw32-gcc ghost.c \
+        -o build/ghost.exe \
         -O2 \
         -Wall
 else
@@ -20,8 +21,9 @@ else
     echo "[*] Attempting to compile with gcc -m32..."
     echo ""
 
-    gcc src/ghost.c \
-        -o ghostwriting2.exe \
+    mkdir -p build
+    gcc ghost.c \
+        -o build/ghost.exe \
         -m32 \
         -O2 \
         -Wall
@@ -29,15 +31,15 @@ fi
 
 if [ $? -eq 0 ]; then
     echo ""
-    echo "[+] Build successful: ghostwriting2.exe"
+    echo "[+] Build successful: build/ghost.exe"
     echo ""
     echo "Usage:"
-    echo "  ./ghostwriting2.exe <thread_id>"
+    echo "  ./build/ghost.exe <thread_id>"
     echo ""
     echo "Example:"
-    echo "  ./ghostwriting2.exe 1234"
+    echo "  ./build/ghost.exe 1234"
     echo ""
-    echo "Tip: Use Process Hacker or similar tools to find thread IDs"
+    echo "Tip: Use Process Explorer or similar tools to find thread IDs"
 else
     echo ""
     echo "[-] Build failed!"
@@ -45,6 +47,6 @@ else
     echo "This technique requires a 32-bit Windows compiler."
     echo "Please install i686-w64-mingw32-gcc or use a 32-bit MinGW environment."
     echo ""
-    echo "Source code is available in src/ for reference."
+    echo "Source code is available for reference."
     exit 1
 fi

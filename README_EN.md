@@ -74,9 +74,9 @@ Innovative methods to bypass modern security defenses:
 
 Latest security research from 2023-2024:
 
-32. **GhostInjector**
-33. **GhostWriting**
-34. **GhostWriting-2**
+32. **GhostInjector** ❌
+33. **GhostWriting** ❌
+34. **GhostWriting-2** ❌
 35. **Mapping Injection** (Enhanced)
 36. **SetProcessInjection** - ProcessInstrumentationCallback Injection
 37. **PoolParty** - Windows Thread Pool Injection (TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT)

