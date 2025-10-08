@@ -23,8 +23,8 @@
 
 利用 Windows 进程创建机制的高级攻击：
 
-1. **Process Hollowing** - 进程镂空 (文档)
-2. **Transacted Hollowing** - 事务镂空 (文档)
+1. **Process Hollowing** - 进程镂空 ✅
+2. **Transacted Hollowing** - 事务镂空 ✅
 3. **Process Doppelgänging** - 进程伪装 ❌
 4. **Process Herpaderping** - 进程篡改 ✅
 5. **Process Ghosting** - 进程幽灵化 ✅
@@ -35,7 +35,7 @@
 
 6. **Early Bird APC** - 早期鸟 APC 注入 ✅
 7. **Entry Point Injection** - 入口点注入 ✅
-8. **DLL Blocking (Ruy-Lopez)** - DLL 阻断注入 (文档)
+8. **DLL Blocking (Ruy-Lopez)** - DLL 阻断注入 ✅
 9. **Early Cascade** - 早期级联注入 ✅
 10. **Kernel Callback Table** - 内核回调表注入 ✅
 
@@ -48,7 +48,7 @@ Windows 注入技术的基础方法：
 13. **Shellcode Injection** - Shellcode 注入 ✅
 14. **SetWindowsHookEx** - 钩子注入 ✅
 15. **Reflective DLL Injection** - 反射式 DLL 注入 ✅
-16. **PE Injection** - PE 注入 (文档)
+16. **PE Injection** - PE 注入 ✅
 17. **Mapping Injection** - 映射注入 ❌
 18. **APC Queue Injection** - APC 队列注入 ✅
 19. **Thread Hijacking** - 线程劫持 ✅
@@ -284,16 +284,15 @@ ldrshuffle.exe
 
 | 状态 | 含义 |
 |-----|------|
-| ✅ | 测试成功，技术有效 |
+| ✅ | 测试成功或完整文档 |
 | ❌ | 测试失败或技术已失效 |
 | ⚠️ | 部分实现/跳过/需要特殊环境 |
-| (文档) | 仅有理论文档，未实际测试 |
 
 ### 已测试技术
 
 **进程操纵技术 (1-5)**:
-- **01. Process Hollowing** (文档) - 理论文档
-- **02. Transacted Hollowing** (文档) - 理论文档
+- **01. Process Hollowing** ✅ - 完整技术文档（手动PE节写入 + PEB ImageBase更新）
+- **02. Transacted Hollowing** ✅ - 完整技术文档（NTFS事务 + SEC_IMAGE节映射）
 - **03. Process Doppelgänging** ❌ - Windows 10+ 已失效 (NtCreateThreadEx 返回 ACCESS_DENIED)
 - **04. Process Herpaderping** ✅ - 镜像节缓存机制有效
 - **05. Process Ghosting** ✅ - 删除待处理文件机制有效
@@ -301,7 +300,7 @@ ldrshuffle.exe
 **早期执行和回调技术 (6-10)**:
 - **06. Early Bird APC** ✅ - 挂起进程 APC 注入成功
 - **07. Entry Point Injection** ✅ - 入口点劫持成功
-- **08. DLL Blocking** (文档) - 理论文档（GCC版本兼容性问题）
+- **08. DLL Blocking** ✅ - 完整技术文档（NtCreateSection Hook + Egg替换机制）
 - **09. Early Cascade** ✅ - PROCESS_CREATE_FLAGS_INHERIT_HANDLES + memset 成功
 - **10. Kernel Callback Table** ✅ - PEB KernelCallbackTable 劫持成功
 
@@ -311,7 +310,7 @@ ldrshuffle.exe
 - **13. Shellcode Injection** ✅ - VirtualAllocEx + WriteProcessMemory 成功
 - **14. SetWindowsHookEx** ✅ - 消息钩子注入成功
 - **15. Reflective DLL Injection** ✅ - 反射式加载成功
-- **16. PE Injection** (文档) - 理论文档
+- **16. PE Injection** ✅ - 完整技术文档（自复制PE注入 + 影子进程）
 - **17. Mapping Injection** ❌ - Windows 10+ 已失效
 - **18. APC Queue Injection** ✅ - 用户模式 APC 队列成功
 - **19. Thread Hijacking** ✅ - 线程上下文劫持成功
