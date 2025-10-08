@@ -1,5 +1,9 @@
 # Module Stomping 注入技术测试报告
 
+## 测试结果：✅ **成功**
+
+Calculator shellcode 成功执行并弹出计算器！
+
 ## 技术概述
 
 **技术名称**: Module Stomping (模块践踏注入)
