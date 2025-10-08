@@ -60,15 +60,15 @@ Windows 注入技术的基础方法：
 
 21. **Mockingjay** - RWX 节区注入
 22. **PowerLoaderEx** - 共享桌面堆注入
-23. **Threadless Inject** - 无线程注入
+23. **Threadless Inject** - 无线程注入 ✅
 24. **EPI** - DLL 入口点劫持注入
 25. **DLL Notification Injection** - DLL 通知回调注入
-26. **Module Stomping** - 模块践踏注入
-27. **Gadget APC Injection** - Gadget APC 注入
-28. **Process Forking (Dirty Vanity)** - 进程分叉注入
-29. **Function Stomping** - 函数践踏注入
-30. **Caro-Kann** - 加密 Shellcode 内存扫描规避
-31. **Stack Bombing** - 栈轰炸注入
+26. **Module Stomping** - 模块践踏注入 ✅
+27. **Gadget APC Injection** - Gadget APC 注入 ✅
+28. **Process Forking (Dirty Vanity)** - 进程分叉注入 ✅
+29. **Function Stomping** - 函数践踏注入 ✅
+30. **Caro-Kann** - 加密 Shellcode 内存扫描规避 ⚠️
+31. **Stack Bombing** - 栈轰炸注入 ⚠️
 
 ### 现代前沿技术 (32-41)
 
@@ -277,6 +277,29 @@ ldrshuffle.exe
 2. 新技术配有详细的 README.md
 3. 正确归属研究来源
 4. 在 Windows 10/11 上测试
+
+## 测试状态
+
+**测试环境**: Windows 10 Build 26100 (MSYS_NT-10.0-26100 x86_64), GCC (MinGW64)
+
+| 状态 | 含义 |
+|-----|------|
+| ✅ | 测试成功，技术有效 |
+| ⚠️ | 部分实现/跳过/可能失效 |
+| - | 未测试 |
+
+### 已测试技术
+
+**高级规避技术 (21-31)**:
+- **23. Threadless Inject** ✅ - 成功注入，Calculator 启动
+- **26. Module Stomping** ✅ - 成功覆盖 amsi.dll，NtOpenFile Hook 触发
+- **27. Gadget APC Injection** ✅ - 使用 ntdll gadget 成功注入
+- **28. Process Forking** ✅ - RtlCreateProcessReflection 成功，需要 PEB Walking shellcode
+- **29. Function Stomping** ✅ - 成功覆盖 CreateFileW，使用 PAGE_EXECUTE_WRITECOPY 绕过 Malfind
+- **30. Caro-Kann** ⚠️ - **跳过**（需要 NASM + MinGW-w64 + API Hashing 专门环境）
+- **31. Stack Bombing** ⚠️ - **部分实现**（原版 POC 设计问题，无法完全验证 + 可能在新版 Windows 上失效）
+
+详细测试报告见 `docs/testing-guides/` 目录。
 
 ## 许可证
 
