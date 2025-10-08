@@ -23,46 +23,46 @@
 
 利用 Windows 进程创建机制的高级攻击：
 
-1. **Process Hollowing** - 进程镂空
-2. **Transacted Hollowing** - 事务镂空
-3. **Process Doppelgänging** - 进程伪装
-4. **Process Herpaderping** - 进程篡改
-5. **Process Ghosting** - 进程幽灵化
+1. **Process Hollowing** - 进程镂空 (文档)
+2. **Transacted Hollowing** - 事务镂空 (文档)
+3. **Process Doppelgänging** - 进程伪装 ❌
+4. **Process Herpaderping** - 进程篡改 ✅
+5. **Process Ghosting** - 进程幽灵化 ✅
 
 ### 早期执行和回调技术 (6-10)
 
 在进程/线程初始化阶段劫持执行流：
 
-6. **Early Bird APC** - 早期鸟 APC 注入
-7. **Entry Point Injection** - 入口点注入
-8. **DLL Blocking (Ruy-Lopez)** - DLL 阻断注入
-9. **Early Cascade** - 早期级联注入
-10. **Kernel Callback Table** - 内核回调表注入
+6. **Early Bird APC** - 早期鸟 APC 注入 ✅
+7. **Entry Point Injection** - 入口点注入 ✅
+8. **DLL Blocking (Ruy-Lopez)** - DLL 阻断注入 (文档)
+9. **Early Cascade** - 早期级联注入 ✅
+10. **Kernel Callback Table** - 内核回调表注入 ✅
 
 ### 经典注入技术 (11-20)
 
 Windows 注入技术的基础方法：
 
-11. **Advanced Hollowing** - 高级镂空
-12. **DLL Injection** - DLL 注入
-13. **Shellcode Injection** - Shellcode 注入
-14. **SetWindowsHookEx** - 钩子注入
-15. **Reflective DLL Injection** - 反射式 DLL 注入
-16. **PE Injection** - PE 注入
-17. **Mapping Injection** - 映射注入
-18. **APC Queue Injection** - APC 队列注入
-19. **Thread Hijacking** - 线程劫持
-20. **Atom Bombing** - 原子轰炸
+11. **Advanced Hollowing** - 高级镂空 ✅
+12. **DLL Injection** - DLL 注入 ✅
+13. **Shellcode Injection** - Shellcode 注入 ✅
+14. **SetWindowsHookEx** - 钩子注入 ✅
+15. **Reflective DLL Injection** - 反射式 DLL 注入 ✅
+16. **PE Injection** - PE 注入 (文档)
+17. **Mapping Injection** - 映射注入 ❌
+18. **APC Queue Injection** - APC 队列注入 ✅
+19. **Thread Hijacking** - 线程劫持 ✅
+20. **Atom Bombing** - 原子轰炸 ❌
 
 ### 高级规避技术 (21-31)
 
 绕过现代安全防护的创新方法：
 
-21. **Mockingjay** - RWX 节区注入
-22. **PowerLoaderEx** - 共享桌面堆注入
+21. **Mockingjay** - RWX 节区注入 ✅
+22. **PowerLoaderEx** - 共享桌面堆注入 ❌
 23. **Threadless Inject** - 无线程注入 ✅
-24. **EPI** - DLL 入口点劫持注入
-25. **DLL Notification Injection** - DLL 通知回调注入
+24. **EPI** - DLL 入口点劫持注入 ✅
+25. **DLL Notification Injection** - DLL 通知回调注入 ✅
 26. **Module Stomping** - 模块践踏注入 ✅
 27. **Gadget APC Injection** - Gadget APC 注入 ✅
 28. **Process Forking (Dirty Vanity)** - 进程分叉注入 ✅
@@ -285,19 +285,50 @@ ldrshuffle.exe
 | 状态 | 含义 |
 |-----|------|
 | ✅ | 测试成功，技术有效 |
-| ⚠️ | 部分实现/跳过/可能失效 |
-| - | 未测试 |
+| ❌ | 测试失败或技术已失效 |
+| ⚠️ | 部分实现/跳过/需要特殊环境 |
+| (文档) | 仅有理论文档，未实际测试 |
 
 ### 已测试技术
 
+**进程操纵技术 (1-5)**:
+- **01. Process Hollowing** (文档) - 理论文档
+- **02. Transacted Hollowing** (文档) - 理论文档
+- **03. Process Doppelgänging** ❌ - Windows 10+ 已失效 (NtCreateThreadEx 返回 ACCESS_DENIED)
+- **04. Process Herpaderping** ✅ - 镜像节缓存机制有效
+- **05. Process Ghosting** ✅ - 删除待处理文件机制有效
+
+**早期执行和回调技术 (6-10)**:
+- **06. Early Bird APC** ✅ - 挂起进程 APC 注入成功
+- **07. Entry Point Injection** ✅ - 入口点劫持成功
+- **08. DLL Blocking** (文档) - 理论文档（GCC版本兼容性问题）
+- **09. Early Cascade** ✅ - PROCESS_CREATE_FLAGS_INHERIT_HANDLES + memset 成功
+- **10. Kernel Callback Table** ✅ - PEB KernelCallbackTable 劫持成功
+
+**经典注入技术 (11-20)**:
+- **11. Advanced Hollowing** ✅ - 改进版镂空成功
+- **12. DLL Injection** ✅ - LoadLibrary 注入成功
+- **13. Shellcode Injection** ✅ - VirtualAllocEx + WriteProcessMemory 成功
+- **14. SetWindowsHookEx** ✅ - 消息钩子注入成功
+- **15. Reflective DLL Injection** ✅ - 反射式加载成功
+- **16. PE Injection** (文档) - 理论文档
+- **17. Mapping Injection** ❌ - Windows 10+ 已失效
+- **18. APC Queue Injection** ✅ - 用户模式 APC 队列成功
+- **19. Thread Hijacking** ✅ - 线程上下文劫持成功
+- **20. Atom Bombing** ❌ - Windows 10+ 已失效
+
 **高级规避技术 (21-31)**:
-- **23. Threadless Inject** ✅ - 成功注入，Calculator 启动
-- **26. Module Stomping** ✅ - 成功覆盖 amsi.dll，NtOpenFile Hook 触发
-- **27. Gadget APC Injection** ✅ - 使用 ntdll gadget 成功注入
-- **28. Process Forking** ✅ - RtlCreateProcessReflection 成功，需要 PEB Walking shellcode
-- **29. Function Stomping** ✅ - 成功覆盖 CreateFileW，使用 PAGE_EXECUTE_WRITECOPY 绕过 Malfind
-- **30. Caro-Kann** ⚠️ - **跳过**（需要 NASM + MinGW-w64 + API Hashing 专门环境）
-- **31. Stack Bombing** ⚠️ - **部分实现**（原版 POC 设计问题，无法完全验证 + 可能在新版 Windows 上失效）
+- **21. Mockingjay** ✅ - RWX 节区利用成功（msys-2.0.dll）
+- **22. PowerLoaderEx** ❌ - Windows 10 桌面堆结构变更，已失效
+- **23. Threadless Inject** ✅ - Hook 函数触发成功
+- **24. EPI** ✅ - DLL 入口点劫持成功
+- **25. DLL Notification Injection** ✅ - LdrDllNotification 回调成功
+- **26. Module Stomping** ✅ - amsi.dll NtOpenFile 覆盖成功
+- **27. Gadget APC Injection** ✅ - ntdll.dll gadget 利用成功
+- **28. Process Forking** ✅ - RtlCreateProcessReflection 成功
+- **29. Function Stomping** ✅ - CreateFileW PAGE_EXECUTE_WRITECOPY 成功
+- **30. Caro-Kann** ⚠️ - 跳过（需要 NASM + MinGW-w64 + API Hashing）
+- **31. Stack Bombing** ⚠️ - 部分实现（原版 POC 问题 + 可能失效）
 
 详细测试报告见 `docs/testing-guides/` 目录。
 
