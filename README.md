@@ -4,6 +4,8 @@
 
 全面收集 41 种 Windows 进程注入技术的 C 语言实现，涵盖经典方法到前沿研究。
 
+> 📖 **核心参考**: 本项目基于 [itaymigdal/awesome-injection](https://github.com/itaymigdal/awesome-injection) 项目中整理的技术列表和研究资料进行实现和测试。
+
 ## 项目介绍
 
 本仓库包含 Windows 进程注入技术的完整实现，从基础概念到高级规避方法系统化组织。每个技术都是独立实现，配有详细文档，解释底层机制、检测策略和实际应用。
@@ -218,6 +220,9 @@ ldrshuffle.exe
 41. [RWXstoned/LdrShuffle](https://github.com/RWXstoned/LdrShuffle) - LdrShuffle
 
 ## 特别感谢
+
+### 核心参考项目
+- **[itaymigdal/awesome-injection](https://github.com/itaymigdal/awesome-injection)** - 本项目的核心参考资源，提供了全面的Windows进程注入技术列表和研究方向。我们的41种技术实现主要基于该项目整理的技术分类和参考资料。
 
 ### 研究者与组织
 - **@hasherezade** - 在 Windows 进程注入领域的多项开创性研究（Process Doppelgänging, Transacted Hollowing, Process Ghosting, Waiting Thread Hijacking, Thread Name-Calling）
