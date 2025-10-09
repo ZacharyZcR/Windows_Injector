@@ -177,7 +177,7 @@ ldrshuffle.exe
 6. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - Early Bird APC (包含 Ruy-Lopez/HookForward)
 7. [diversenok/Suspending-Techniques](https://github.com/diversenok/Suspending-Techniques) - Entry Point Injection (AddressOfEntryPoint-injection)
 8. [S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann) - DLL Blocking (包含 Ruy-Lopez/DllBlock)
-9. [D1rkMtr/earlycascade-injection](https://github.com/D1rkMtr/earlycascade-injection) - Early Cascade
+9. [Cracked5pider/earlycascade-injection](https://github.com/Cracked5pider/earlycascade-injection) - Early Cascade
 10. [odzhan/injection](https://github.com/odzhan/injection) - Kernel Callback Table (KernelCallbackTable-Injection-PoC)
 
 ### 经典注入技术 (11-20)

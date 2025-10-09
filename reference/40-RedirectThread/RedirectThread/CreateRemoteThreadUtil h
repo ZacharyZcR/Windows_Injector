@@ -1,0 +1,10 @@
+#pragma once
+#include "Injection.h"
+
+bool CreateRemoteThreadViaGadget(HANDLE processHandle, const GadgetInfo &ropGadget,
+                                 DWORD64 arg1, DWORD64 arg2, DWORD64 arg3, DWORD64 arg4,
+                                 DWORD64 functionAddress, DWORD64 exitThreadAddr);
+bool PerformRemoteMemoryCopy(HANDLE processHandle, const GadgetInfo &ropGadget,
+                             LPVOID memCopyAddress,
+                             DWORD64 destinationAddress, const unsigned char *sourceData, size_t dataSize,
+                             DWORD64 exitThreadAddr);
