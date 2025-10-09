@@ -82,7 +82,7 @@ Windows 注入技术的基础方法：
 37. **PoolParty** - Windows 线程池注入（TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT）✅
 38. **Thread Name-Calling** - 线程名称注入 ❌
 39. **Waiting Thread Hijacking** - 等待线程劫持 ✅
-40. **RedirectThread** - CONTEXT-Only 注入（ROP Gadget + DLL 指针注入）
+40. **RedirectThread** - CONTEXT-Only 注入（ROP Gadget + DLL 指针注入）⚠️
 41. **LdrShuffle** - EntryPoint 劫持
 
 ## 项目结构
@@ -333,6 +333,7 @@ ldrshuffle.exe
 - **37. PoolParty** ✅ - TP_WORK 远程插入成功（SafeBreach Labs 官方实现）
 - **38. Thread Name-Calling** ❌ - Windows 11 Build 26100 限制 Special User APC（SetThreadDescription APC 超时）
 - **39. Waiting Thread Hijacking** ✅ - WrQueue 线程栈返回地址劫持成功（ASLR 会话级一致性验证）
+- **40. RedirectThread** ⚠️ - DLL指针注入成功，NtCreateThread + ROP受Windows 11限制（CreateRemoteThread + SetThreadContext有效）
 
 详细测试报告见 `docs/testing-guides/` 目录。
 
