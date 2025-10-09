@@ -81,7 +81,7 @@ Windows 注入技术的基础方法：
 36. **SetProcessInjection** - ProcessInstrumentationCallback 注入
 37. **PoolParty** - Windows 线程池注入（TP_WORK/TP_WAIT/TP_TIMER/TP_IO/TP_JOB/TP_ALPC/TP_DIRECT）✅
 38. **Thread Name-Calling** - 线程名称注入 ❌
-39. **Waiting Thread Hijacking** - 等待线程劫持
+39. **Waiting Thread Hijacking** - 等待线程劫持 ✅
 40. **RedirectThread** - CONTEXT-Only 注入（ROP Gadget + DLL 指针注入）
 41. **LdrShuffle** - EntryPoint 劫持
 
@@ -328,6 +328,11 @@ ldrshuffle.exe
 - **29. Function Stomping** ✅ - CreateFileW PAGE_EXECUTE_WRITECOPY 成功
 - **30. Caro-Kann** ⚠️ - 跳过（需要 NASM + MinGW-w64 + API Hashing）
 - **31. Stack Bombing** ⚠️ - 部分实现（原版 POC 问题 + 可能失效）
+
+**现代前沿技术 (32-41)**:
+- **37. PoolParty** ✅ - TP_WORK 远程插入成功（SafeBreach Labs 官方实现）
+- **38. Thread Name-Calling** ❌ - Windows 11 Build 26100 限制 Special User APC（SetThreadDescription APC 超时）
+- **39. Waiting Thread Hijacking** ✅ - WrQueue 线程栈返回地址劫持成功（ASLR 会话级一致性验证）
 
 详细测试报告见 `docs/testing-guides/` 目录。
 
