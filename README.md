@@ -83,7 +83,7 @@ Windows 注入技术的基础方法：
 38. **Thread Name-Calling** - 线程名称注入 ❌
 39. **Waiting Thread Hijacking** - 等待线程劫持 ✅
 40. **RedirectThread** - CONTEXT-Only 注入（ROP Gadget + DLL 指针注入）⚠️
-41. **LdrShuffle** - EntryPoint 劫持
+41. **LdrShuffle** - EntryPoint 劫持 ✅
 
 ## 项目结构
 
@@ -334,6 +334,7 @@ ldrshuffle.exe
 - **38. Thread Name-Calling** ❌ - Windows 11 Build 26100 限制 Special User APC（SetThreadDescription APC 超时）
 - **39. Waiting Thread Hijacking** ✅ - WrQueue 线程栈返回地址劫持成功（ASLR 会话级一致性验证）
 - **40. RedirectThread** ⚠️ - DLL指针注入成功，NtCreateThread + ROP受Windows 11限制（CreateRemoteThread + SetThreadContext有效）
+- **41. LdrShuffle** ✅ - PEB LDR EntryPoint劫持成功（DLL_THREAD_ATTACH触发，干净调用栈）
 
 详细测试报告见 `docs/testing-guides/` 目录。
 
