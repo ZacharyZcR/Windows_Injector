@@ -195,3 +195,20 @@ build\dll_notification_injection.exe RuntimeBroker.exe
 - [Proxying DLL Loads - 0xdarkvortex](https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/)
 - [ShellcodeTemplate - Cracked5pider](https://github.com/Cracked5pider/ShellcodeTemplate)
 - [Cronos - Idov31](https://github.com/Idov31/Cronos)
+
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ✅ **未检出** - 完美执行
+
+**观察:**
+- DLL通知注入成功绕过360监控
+- LdrpDllNotificationList操作未被检测
+
+**建议:**
+- 可作为主力注入技术
+- 配合合法DLL加载效果更佳
+

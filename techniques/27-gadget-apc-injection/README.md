@@ -296,3 +296,20 @@ gadget_apc_injection.exe remote 5678 calc_shellcode.bin
 - [LloydLabs Repository](https://github.com/LloydLabs/ntqueueapcthreadex-ntdll-gadget-injection)
 - [Avast Research - Raspberry Robin](https://decoded.avast.io/janvojtesek/raspberry-robins-roshtyak-a-little-lesson-in-trickery/)
 - [Shellcode Plain Sight](https://github.com/LloydLabs/shellcode-plain-sight)
+
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ✅ **未检出** - 完美执行
+
+**观察:**
+- Gadget APC注入成功绕过360监控
+- ntdll.dll gadget利用未被识别
+
+**建议:**
+- 极高隐蔽性技术
+- 需要精确找到可用的gadget，建议使用自动化工具
+

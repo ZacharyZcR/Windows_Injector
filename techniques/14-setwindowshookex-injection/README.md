@@ -371,3 +371,18 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 - **Shellcode Injection** - `techniques/13-shellcode-injection/`
 - **APC Injection** - 异步过程调用注入
 - **Thread Hijacking** - 线程劫持注入
+
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ❌ **未成功** - SetWindowsHookEx被360监控
+
+**检测点:**
+- SetWindowsHookEx调用触发钩子检测规则
+- DLL加载到系统进程的行为被拦截
+
+**建议:** 使用其他注入方式或配合白加黑利用
+

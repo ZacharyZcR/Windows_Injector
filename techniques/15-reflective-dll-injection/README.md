@@ -553,3 +553,21 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved) {
 - **Shellcode Injection** - `techniques/13-shellcode-injection/`
 - **Process Hollowing** - `techniques/01-process-hollowing/`
 - **Manual Mapping** - 类似技术，手动映射 DLL
+
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ⚠️ **需验证** - cmd显示执行成功
+
+**观察:**
+- 命令行输出了成功信息
+- 但目标进程行为需进一步验证确认
+
+**建议:**
+- 检查目标进程内存是否真实加载DLL
+- 验证DLL功能是否正常执行
+- 可能需要添加日志或调试信息
+

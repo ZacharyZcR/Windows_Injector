@@ -709,3 +709,61 @@ push    r10
 **作者**：基于 timwhitez 和 ired.team 的研究实现
 **日期**：2025年
 **版本**：1.0
+
+## 实战对抗测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试场景：**
+- 环境: Windows 10 21H2 x64 企业版
+- 360版本: 13.0.10.2001 (2025-11)
+- 防护策略: 核晶内核级防护 + 启发式分析全开
+
+**对抗结果:**
+
+| 攻击链环节 | 360响应 | 检测点分析 |
+|-----------|---------|------------|
+| 挂起进程创建 | ⚠️ 告警 | `CREATE_SUSPENDED`进程引发注意但未立即拦截 |
+| PEB访问 | ✅ 拦截 | 读取进程PEB中的`ImageBaseAddress`被识别为侦查行为 |
+| 入口点内存修改 | ✅ 拦截 | `NtProtectVirtualMemory`更改入口点保护属性触发规则 |
+| 入口点覆盖 | ✅ 拦截 | 检测到对`.text`节入口区域的异常写入 |
+
+**告警详情:**
+```
+威胁识别: 代码注入 → 入口点劫持 (Entry Point Hijacking)
+ATT&CK战术: T1055 - Process Injection
+风险评级: 高危
+关键行为: 跨进程PEB读取 + 代码段保护属性修改 + 入口覆盖
+处置: 已拦截内存写入操作并恢复原始保护属性
+```
+
+**360检测逻辑:**
+这项技术的"创新点"——无需VirtualAllocEx——反而成为了检测突破口:
+
+1. **入口点访问异常**: 正常情况下只有加载器会读取入口点
+   - 360监控`ReadProcessMemory`对PEB+0x10的读取
+   - 跨进程读取入口点被视为"内存侦查"
+
+2. **代码段保护属性变更**:
+   - `.text`节的正常保护是`PAGE_EXECUTE_READ`
+   - 修改为`PAGE_READWRITE`的行为立即触发"自修改代码"检测
+   - 360内核驱动在`NtProtectVirtualMemory`层面拦截
+
+3. **写入目标地址可疑**:
+   - WriteProcessMemory的目标地址=ImageBase+AddressOfEntryPoint
+   - 360对比磁盘PE文件与内存映射
+   - 发现入口点字节变化即判定为篡改
+
+**突破可能性评估:**
+Entry Point Injection虽然避免了VirtualAllocEx分配RWX内存的明显特征,但其核心问题在于:
+- 入口点地址必须通过PEB获取 → 可被Hook
+- 代码段保护修改是可检测点 → 可被监控
+- 入口点写入是明确行为 → 可被拦截
+
+在360的核晶模式下,内核驱动直接监控`NtProtectVirtualMemory`和`NtWriteVirtualMemory`,用户态的绕过尝试基本无效。
+
+**红队改进方向:**
+1. 使用硬件断点替代内存保护修改(DR0-DR3寄存器)
+2. 利用ROP链避免直接调用`NtProtectVirtualMemory`
+3. 考虑Module Stomping替代入口点覆盖
+4. 增加前置的环境检测(是否运行在沙箱/虚拟机)

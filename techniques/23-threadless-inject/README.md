@@ -421,7 +421,22 @@ build\threadless_inject.exe 1234 ntdll.dll NtOpenFile payload.bin
 
 本技术仅供安全研究和教育目的使用。使用者应遵守当地法律法规，不得用于非法用途。作者不对任何滥用行为负责。
 
-## 参考资料
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ✅ **未检出** - 完美执行
+
+**观察:**
+- Threadless注入技术成功绕过360监控
+- Hook NtUserCreateWindowEx未触发警报
+
+**建议:**
+- 高价值技术，建议在红队演练中使用
+- 可配合Module Stomping进一步增强隐蔽性
+
 
 - [ThreadlessInject GitHub](https://github.com/CCob/ThreadlessInject)
 - [Bsides Cymru 2023 - Needles Without the Thread](https://pretalx.com/bsides-cymru-2023-2022/talk/BNC8W3/)

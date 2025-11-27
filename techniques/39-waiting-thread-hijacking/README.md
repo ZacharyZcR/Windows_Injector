@@ -256,3 +256,21 @@ Common wait reasons you might target:
 ## License
 
 This implementation is for educational and defensive security research purposes only.
+
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ❌ **未成功** - NtSetContextThread被拦截
+
+**问题:**
+- 对已挂起线程的SetThreadContext操作被360监控
+- Waiting Thread Hijack行为模式被识别
+
+**建议:**
+- 此技术在360核晶模式下效果有限
+- 考虑使用其他线程劫持技术
+- 或在早期版本Windows中测试
+

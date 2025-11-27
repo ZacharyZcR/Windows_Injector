@@ -228,3 +228,20 @@ process_forking.exe 1234 calc_shellcode.bin
 4. **不稳定性**
    - `RtlCreateProcessReflection` 是未公开的 API
    - 可能在未来的 Windows 版本中被移除或修改
+
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ❌ **未成功** - 360拦截进程反射操作
+
+**问题:**
+- RtlCreateProcessReflection调用触发360内核监控
+- 进程forking行为被识别为可疑操作
+
+**建议:**
+- 考虑使用其他进程复制技术
+- 或放弃此技术路线
+

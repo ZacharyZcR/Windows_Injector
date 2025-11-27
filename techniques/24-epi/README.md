@@ -446,7 +446,22 @@ build\epi.exe 1234 payload.bin -d kernel32.dll -f
 
 本技术仅供安全研究和教育目的使用。使用者应遵守当地法律法规，不得用于非法用途。作者不对任何滥用行为负责。
 
-## 参考资料
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ✅ **未检出** - 完美执行
+
+**观察:**
+- EPI利用PEB修改成功绕过360检测
+- TpWorkCallback劫持未被行为监控捕获
+
+**建议:**
+- 可作为高级注入技术储备
+- 注意PEB结构在不同Windows版本的变化
+
 
 - [EPI GitHub](https://github.com/Kudaes/EPI)
 - [Process Environment Block (PEB) - Microsoft](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb)

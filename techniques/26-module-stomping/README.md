@@ -289,3 +289,20 @@ C:\> module_stomping.exe 5678 calc_shellcode.bin amsi.dll ntdll.dll NtOpenFile
 - [D1rkInject Repository](https://github.com/d1rkmtrr/D1rkInject)
 - [ThreadlessInject Repository](https://github.com/CCob/ThreadlessInject)
 - [Module Stomping - Elastic Security](https://www.elastic.co/blog/process-injection-module-stomping)
+
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ✅ **未检出** - 完美执行
+
+**观察:**
+- Module Stomping成功绕过360模块加载监控
+- 践踏合法DLL代码段未被识别
+
+**建议:**
+- 高隐蔽性技术，建议使用
+- 选择不常用的系统DLL作为目标
+

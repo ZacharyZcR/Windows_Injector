@@ -273,7 +273,22 @@ build\powerloader_ex.exe
 
 本技术仅供安全研究和教育目的使用。使用者应遵守当地法律法规，不得用于非法用途。作者不对任何滥用行为负责。
 
-## 参考资料
+## 杀软测试
+
+### 360安全卫士 13.0.10.2001（核晶模式）
+
+**测试时间:** 2025-11
+
+**测试结果:** ❌ **动态报毒** - 执行时360报警
+
+**问题:**
+- Injector在运行时触发360行为监控
+- 对explorer.exe的SetWindowLong调用被拦截
+
+**建议:**
+- 对加载器做动态混淆
+- 使用其他触发方式替代窗口过程Hook
+
 
 - [PowerLoaderEx GitHub](https://github.com/BreakingMalware/PowerLoaderEx)
 - [Extra Window Memory Injection - MITRE](https://attack.mitre.org/techniques/T1055/011/)
