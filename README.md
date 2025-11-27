@@ -343,9 +343,87 @@ ldrshuffle.exe
 
 详细测试报告见 `docs/testing-guides/` 目录。
 
-## 杀毒软件测试  
+## 杀毒软件测试
 
-详情请见techniques下每个子目录下面的readme.md文档的新增部分
+### 360安全卫士 13.0.10.2001 测试结果汇总
+
+**测试环境**:
+- 360安全卫士 13.0.10.2001 (核晶模式 - 最高防护)
+- 测试时间: 2025-11
+- 系统版本: Windows 10 Build 26100
+
+#### 测试覆盖率：73.2% (30/41)
+
+#### 技术分类统计
+
+| 技术类别 | 总数 | ✅ 绕过 | ❌ 拦截 | 未测试 | 成功率 |
+|---------|------|---------|---------|--------|--------|
+| **进程操纵 (1-5)** | 5 | 0 | 5 | 0 | .0% |
+| **早期执行 (6-10)** | 5 | 0 | 5 | 0 | **0.0%** |
+| **经典注入 (11-20)** | 10 | 5 | 5 | 0 | 50.0% |
+| **高级规避 (21-30)** | 10 | 6 | 3 | 1 | **66.7%** |
+| **现代技术 (31-41)** | 11 | 0 | 1 | 10 | 0.0% |
+| **合计** | **41** | **13** | **17** | **11** | **43.3%** |
+
+#### 详细测试结果
+
+**✅ 成功绕过360的技术 (13项)**
+1. 11. Advanced Hollowing - 避免经典镂空行为模式
+2. 15. Reflective DLL Injection - 内存反射加载
+3. 16. PE Injection - 自复制PE注入
+4. 18. APC Queue Injection - 用户模式APC队列
+5. 19. Thread Hijacking - 线程上下文劫持
+6. 20. Atom Bombing - 全局原子表利用
+7. 23. Threadless Inject - Hook触发，无注入线程
+8. 24. EPI - Entry Point Invocation劫持
+9. 25. DLL Notification Injection - DLL通知回调利用
+10. 26. Module Stomping - 模块植入攻击
+11. 27. Gadget APC Injection - ntdll Gadget利用
+12. 29. Function Stomping - 函数践踏
+13. 03. Process Doppelgänging - 进程伪装（技术已失效但360未拦截）
+
+**❌ 被360拦截的技术 (17项)**
+- 早期执行技术全部拦截 (6-10号)
+- Process Hollowing、Transacted Hollowing、Shellcode Injection等基础技术
+- Process Herpaderping、Process Ghosting、Mockingjay等已被收录
+
+**未测试技术 (11项)**
+- 现代前沿技术大部分未测试 (Ghost系列、PoolParty等)
+
+#### 360拦截机制分析
+
+1. **内核层系统调用监控**: NtCreateProcess、NtProtectVirtualMemory、NtWriteVirtualMemory等
+2. **行为序列关联**: 关键API调用模式识别（如Process Hollowing的"创建-卸载-写入-恢复"链）
+3. **内存完整性保护**: RWX页分配、ntdll修改等高危操作拦截
+4. **APC注入专杀**: Early Bird APC等APC相关技术全面拦截
+5. **文件-内存一致性校验**: Herpaderping、Ghosting等时序攻击失效
+
+#### 实战建议
+
+**推荐技术**（高成功率 >60%）：
+- **Gadget APC Injection**: 利用ntdll gadget，隐蔽性极高
+- **Threadless Inject**: Hook触发，无传统注入特征
+- **Module Stomping**: 利用合法模块加载时序
+- **DLL Notification Injection**: 合法回调机制利用
+
+**谨慎使用**（中等成功率 40-50%）：
+- Reflective DLL Injection、Thread Hijacking、Atom Bombing
+- 需要进一步测试和优化
+
+**不推荐**（低成功率 <40%）：
+- 早期执行技术（6-10）- 拦截率100%
+- 常规DLL Injection、Shellcode Injection - 特征明显
+- Process Herpaderping/Ghosting - 已被完全检测
+
+#### 各技术详细测试结果文档
+
+详情请见 `techniques/XX-技术名称/README.md` 文档的 "杀软测试" 部分，包含：
+- 完整测试日志和截图
+- 360检测点详细分析
+- 内核驱动拦截逻辑解读
+- 实战价值和改进建议
+
+**注意**: 测试在360核晶模式（最高防护）下进行。关闭核晶模式后，拦截率可能显著降低。
 
 ## 许可证
 
