@@ -1,4 +1,4 @@
-# Windows 进程注入技术集合
+Windows 进程注入技术集合
 
 [English](./README_EN.md) | 简体中文
 
@@ -342,6 +342,10 @@ ldrshuffle.exe
 - **41. LdrShuffle** ✅ - PEB LDR EntryPoint劫持成功（DLL_THREAD_ATTACH触发，干净调用栈）
 
 详细测试报告见 `docs/testing-guides/` 目录。
+
+## 杀毒软件测试  
+
+详情请见techniques下每个子目录下面的readme.md文档的新增部分
 
 ## 许可证
 
